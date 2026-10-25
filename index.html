@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Evidencija Radnih Sati i Materijala</title>
+  <style>
+    /* Reset & Base Variables */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-sub: #1f2937;
+      --card-border: #374151;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --purple: #9333ea;
+      --purple-hover: #7e22ce;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #ef4444;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      line-height: 1.4;
+      padding-bottom: 90px;
+    }
+
+    /* Layout & Containers */
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    /* Headers & Navigation */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(17, 24, 39, 0.95);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(10px);
+    }
+    .user-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      letter-spacing: 0.5px;
+    }
+    .badge-worker { background: rgba(2, 132, 199, 0.2); color: #38bdf8; border: 1px solid rgba(2, 132, 199, 0.4); }
+    .badge-admin { background: rgba(147, 51, 234, 0.2); color: #c084fc; border: 1px solid rgba(147, 51, 234, 0.4); }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(17, 24, 39, 0.98);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+      z-index: 50;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 12px;
+      transition: all 0.15s;
+    }
+    .nav-btn.active {
+      color: #38bdf8;
+      background: rgba(2, 132, 199, 0.15);
+    }
+    .nav-btn.active-admin {
+      color: #c084fc;
+      background: rgba(147, 51, 234, 0.15);
+    }
+    .nav-icon { font-size: 18px; }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Buttons & Inputs */
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; }
+    .btn-purple { background: linear-gradient(135deg, #9333ea, #6366f1); color: white; }
+    .btn-emerald { background: linear-gradient(135deg, #059669, #10b981); color: white; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-sub { background: var(--card-sub); color: var(--text); border: 1px solid var(--card-border); }
+    .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 10px; width: auto; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: #38bdf8;
+    }
+
+    /* Hours 1-12 Selector */
+    .hours-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .hour-chip {
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      color: #94a3b8;
+      border-radius: 10px;
+      padding: 10px 0;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+    }
+    .hour-chip.selected {
+      background: #0284c7;
+      color: white;
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(2, 132, 199, 0.5);
+    }
+
+    /* Status Selector (Rad, GO, BO) */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .status-chip {
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 4px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .status-chip.selected-regular { background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: #10b981; }
+    .status-chip.selected-vacation { background: rgba(2, 132, 199, 0.2); color: #38bdf8; border-color: #0284c7; }
+    .status-chip.selected-sick { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: #f59e0b; }
+
+    /* Materials Grid */
+    .mat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+    }
+    .mat-title { font-size: 12px; font-weight: 700; color: #e2e8f0; }
+    .counter-box { display: flex; align-items: center; gap: 4px; }
+    .btn-step {
+      width: 32px;
+      height: 32px;
+      background: var(--card-sub);
+      color: white;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .input-step {
+      width: 48px;
+      text-align: center;
+      background: #000;
+      border: 1px solid var(--card-border);
+      color: white;
+      border-radius: 8px;
+      padding: 6px 2px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    /* Colleagues Tags */
+    .colleague-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .colleague-chip {
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .colleague-chip.selected {
+      background: rgba(2, 132, 199, 0.25);
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    /* Calendar Grid */
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-cell {
+      min-height: 58px;
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 4px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .cal-cell.today { border-color: #38bdf8; }
+    .cal-cell.empty { background: transparent; border: none; cursor: default; }
+    .cal-tag {
+      font-size: 9px;
+      font-weight: 800;
+      text-align: center;
+      padding: 2px 0;
+      border-radius: 6px;
+      line-height: 1;
+    }
+    .tag-reg { background: rgba(16, 185, 129, 0.25); color: #34d399; }
+    .tag-vac { background: rgba(2, 132, 199, 0.25); color: #38bdf8; }
+    .tag-sick { background: rgba(245, 158, 11, 0.25); color: #fbbf24; }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+      backdrop-filter: blur(4px);
+    }
+    .modal-backdrop.show { display: flex; }
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* Notification Toast */
+    #toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #065f46;
+      color: #a7f3d0;
+      border: 1px solid #059669;
+      padding: 10px 18px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      display: none;
+      z-index: 150;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Toast -->
+  <div id="toast">Poruka</div>
+
+  <!-- Top App Bar (Logged In) -->
+  <header class="top-bar" id="appHeader" style="display: none;">
+    <div>
+      <div style="font-weight: 800; font-size: 15px;" id="headerUserName">Dejan Cikoš</div>
+      <div style="font-size: 11px; color: var(--text-muted);" id="headerUserSubtitle">Djelatnik</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="user-badge" id="headerRoleBadge">Radnik</span>
+      <button class="btn btn-sub btn-sm" onclick="logoutUser()" style="color: #f87171;">Odjava</button>
+    </div>
+  </header>
+
+  <div class="app-container">
+
+    <!-- ================= 1. LOGIN SCREEN ================= -->
+    <div id="viewLogin">
+      <div class="card" style="margin-top: 40px; text-align: center;">
+        <!-- Harmonious Emblem: Full Snowflake and Full Lightning Bolt Interlocked -->
+        <div style="display: flex; justify-content: center; margin-bottom: 14px;">
+          <div style="width: 86px; height: 86px; border-radius: 26px; background: radial-gradient(circle at 35% 30%, #0e2740 0%, #0a1322 55%, #1f1807 100%); border: 1.5px solid rgba(56, 189, 248, 0.4); display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 30px -6px rgba(2, 132, 199, 0.5), 0 0 24px rgba(234, 179, 8, 0.25); position: relative;">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Frost cyan gradient for the full snowflake -->
+                <linearGradient id="fullSnowGrad" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#bae6fd" />
+                  <stop offset="50%" stop-color="#38bdf8" />
+                  <stop offset="100%" stop-color="#0284c7" />
+                </linearGradient>
+
+                <!-- Vivid energetic electric gradient for the full lightning bolt -->
+                <linearGradient id="fullBoltGrad" x1="24" y1="8" x2="44" y2="56" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#ffffff" />
+                  <stop offset="25%" stop-color="#fef08a" />
+                  <stop offset="65%" stop-color="#eab308" />
+                  <stop offset="100%" stop-color="#ca8a04" />
+                </linearGradient>
+
+                <!-- Inner ambient aura -->
+                <radialGradient id="ambientAura" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3" />
+                  <stop offset="60%" stop-color="#eab308" stop-opacity="0.15" />
+                  <stop offset="100%" stop-color="#0a1322" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <!-- Ambient backdrop aura -->
+              <circle cx="32" cy="32" r="26" fill="url(#ambientAura)" />
+
+              <!-- 1. COMPLETE, SYMMETRICAL 6-AXIS SNOWFLAKE -->
+              <g stroke="url(#fullSnowGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.95">
+                <!-- Vertical axis -->
+                <line x1="32" y1="8" x2="32" y2="56" />
+                <path d="M27 13L32 18L37 13" />
+                <path d="M28 22L32 26L36 22" />
+                <path d="M27 51L32 46L37 51" />
+                <path d="M28 42L32 38L36 42" />
+
+                <!-- Diagonal axis 1 (top-left to bottom-right) -->
+                <line x1="11.2" y1="20" x2="52.8" y2="44" />
+                <path d="M14.5 27L19.5 24.5L18 19" />
+                <path d="M49.5 37L44.5 39.5L46 45" />
+
+                <!-- Diagonal axis 2 (bottom-left to top-right) -->
+                <line x1="11.2" y1="44" x2="52.8" y2="20" />
+                <path d="M18 45L19.5 39.5L14.5 37" />
+                <path d="M46 19L44.5 24.5L49.5 27" />
+
+                <!-- Hexagonal central structure ring -->
+                <polygon points="32,23 39.8,27.5 39.8,36.5 32,41 24.2,36.5 24.2,27.5" fill="none" stroke="url(#fullSnowGrad)" stroke-width="1.6" opacity="0.75" />
+
+                <!-- Subtle crystal nodes -->
+                <circle cx="32" cy="8" r="1.5" fill="#bae6fd" stroke="none" />
+                <circle cx="32" cy="56" r="1.5" fill="#bae6fd" stroke="none" />
+                <circle cx="11.2" cy="20" r="1.5" fill="#bae6fd" stroke="none" />
+                <circle cx="52.8" cy="44" r="1.5" fill="#bae6fd" stroke="none" />
+                <circle cx="11.2" cy="44" r="1.5" fill="#bae6fd" stroke="none" />
+                <circle cx="52.8" cy="20" r="1.5" fill="#bae6fd" stroke="none" />
+              </g>
+
+              <!-- 2. COMPLETE, BOLD DYNAMIC LIGHTNING BOLT DIAGONALLY EMBEDDED -->
+              <g style="filter: drop-shadow(0 0 7px rgba(234, 179, 8, 0.65)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));">
+                <!-- Outer sharp silhouette border for clean separation -->
+                <path d="M37 7L24 30H34L26 57L47 28H35L37 7Z" 
+                      fill="url(#fullBoltGrad)" 
+                      stroke="#0b1120" 
+                      stroke-width="1.8" 
+                      stroke-linejoin="round" />
+                
+                <!-- Inner highlighted spine of lightning bolt -->
+                <path d="M36 10L27 29H34.5L29 51L43.5 29H34.5L36 10Z" 
+                      fill="#ffffff" 
+                      opacity="0.35" />
+              </g>
+
+              <!-- 3. ENERGY EMISSION SPARK ACCENTS -->
+              <circle cx="49" cy="25" r="1.4" fill="#fef08a" style="filter: drop-shadow(0 0 3px #facc15);" />
+              <circle cx="23" cy="33" r="1.2" fill="#bae6fd" style="filter: drop-shadow(0 0 3px #38bdf8);" />
+              <circle cx="23" cy="53" r="1.2" fill="#fde047" style="filter: drop-shadow(0 0 3px #eab308);" />
+            </svg>
+          </div>
+        </div>
+        <h1 style="font-size: 22px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.5px; color: #ffffff;">Evidencija radnih sati</h1>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Prijava djelatnika i uprave tvrtke</p>
+        <button type="button" onclick="openCompanyModal()" style="background: rgba(2, 132, 199, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 7px 14px; margin-bottom: 22px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; color: #38bdf8; font-size: 12px; font-weight: 800; font-family: inherit; transition: all 0.15s; outline: none;">
+          <span>🏢 Deltum d.o.o. &bull; OIB: 40386639373</span>
+          <span style="font-size: 10px; background: rgba(56, 189, 248, 0.2); border-radius: 6px; padding: 1px 5px; color: #bae6fd;">ℹ️ Detalji</span>
+        </button>
+
+        <form onsubmit="handleLoginSubmit(event)" style="text-align: left;">
+          <div class="form-group">
+            <label class="form-label">Korisničko ime</label>
+            <input type="text" id="loginUsername" required class="form-input" placeholder="Korisničko ime">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lozinka</label>
+            <input type="password" id="loginPassword" required class="form-input" placeholder="Lozinka">
+          </div>
+          <div id="loginError" style="display: none; color: #f87171; font-size: 12px; font-weight: 700; margin-bottom: 12px;"></div>
+          <button type="submit" class="btn btn-primary">Prijavi se</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= 2. WORKER VIEW: NOVI UNOS ================= -->
+    <div id="viewWorkerEntry" style="display: none;">
+      <!-- Monthly stats ticker -->
+      <div class="card" style="background: linear-gradient(135deg, #111827, #1e293b); border-color: rgba(2, 132, 199, 0.4);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted);">Vaša evidencija ovog mjeseca:</div>
+            <div style="font-size: 26px; font-weight: 900; color: #38bdf8;" id="workerTotalHoursMonth">0 h</div>
+          </div>
+          <div style="font-size: 28px;">⏱️</div>
+        </div>
+      </div>
+
+      <!-- Entry form -->
+      <div class="card">
+        <h2 style="font-size: 15px; font-weight: 800; margin-bottom: 12px;">Unos radnog dana</h2>
+
+        <!-- Status selector (Rad, GO, BO) -->
+        <div class="status-grid">
+          <div class="status-chip selected-regular" id="chipRegular" onclick="setEntryStatus('regular')">🔨 Rad</div>
+          <div class="status-chip" id="chipVacation" onclick="setEntryStatus('vacation')">🌴 GO</div>
+          <div class="status-chip" id="chipSick" onclick="setEntryStatus('sick')">❤️ BO</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Datum</label>
+          <input type="date" id="entryDate" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Broj sati rada (odaberite 1 - 12)</label>
+          <div class="hours-grid">
+            <div class="hour-chip" onclick="selectHours(1)">1</div>
+            <div class="hour-chip" onclick="selectHours(2)">2</div>
+            <div class="hour-chip" onclick="selectHours(3)">3</div>
+            <div class="hour-chip" onclick="selectHours(4)">4</div>
+            <div class="hour-chip" onclick="selectHours(5)">5</div>
+            <div class="hour-chip" onclick="selectHours(6)">6</div>
+            <div class="hour-chip" onclick="selectHours(7)">7</div>
+            <div class="hour-chip selected" onclick="selectHours(8)">8</div>
+            <div class="hour-chip" onclick="selectHours(9)">9</div>
+            <div class="hour-chip" onclick="selectHours(10)">10</div>
+            <div class="hour-chip" onclick="selectHours(11)">11</div>
+            <div class="hour-chip" onclick="selectHours(12)">12</div>
+          </div>
+          <input type="number" step="0.5" id="entryHours" value="8" class="form-input" placeholder="Unos sati">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mjesto rada / Gradilište</label>
+          <input type="text" id="entryLocation" class="form-input" placeholder="npr. Hotel Park - Freonska instalacija">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Opis posla</label>
+          <textarea id="entryDescription" rows="2" class="form-textarea" placeholder="npr. Polaganje cijevi, štemanje, montaža račvi..."></textarea>
+        </div>
+
+        <!-- Colleagues section -->
+        <div class="form-group" id="colleaguesSection">
+          <label class="form-label">👥 Tko je još radio s tobom (rad u timu)?</label>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">Dodirnite kolegu i aplikacija će unijeti isti dan i njemu:</div>
+          <div class="colleague-chips" id="colleagueChipsContainer"></div>
+        </div>
+
+        <!-- Material section (pipes & fittings) -->
+        <div class="card" id="materialSection" style="background: #090d16; border-color: rgba(56, 189, 248, 0.3); padding: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleMaterialAccordion()">
+            <div>
+              <div style="font-size: 13px; font-weight: 800; color: #38bdf8;">📦 Utrošeni materijal</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Cijevi za freon (m), češljevi i račve (kom)</div>
+            </div>
+            <div style="font-size: 12px; color: #38bdf8; font-weight: 800;" id="matAccordionIndicator">+ Prikaži</div>
+          </div>
+
+          <div id="materialInputsBox" style="display: none; margin-top: 12px;">
+            <div style="font-size: 11px; font-weight: 800; color: #7dd3fc; margin-bottom: 8px; text-transform: uppercase;">1. Metraža freonskih cijevi (m):</div>
+            
+            <div class="mat-item">
+              <span class="mat-title">1/4" (6 mm)</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('p_1_4', -1)">-</button>
+                <input type="number" id="mat_p_1_4" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('p_1_4', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="mat-item">
+              <span class="mat-title">3/8" (9 mm)</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('p_3_8', -1)">-</button>
+                <input type="number" id="mat_p_3_8" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('p_3_8', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="mat-item">
+              <span class="mat-title">1/2" (12 mm)</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('p_1_2', -1)">-</button>
+                <input type="number" id="mat_p_1_2" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('p_1_2', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="mat-item">
+              <span class="mat-title">5/8" (15 mm)</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('p_5_8', -1)">-</button>
+                <input type="number" id="mat_p_5_8" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('p_5_8', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="mat-item">
+              <span class="mat-title">3/4" (19 mm)</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('p_3_4', -1)">-</button>
+                <input type="number" id="mat_p_3_4" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('p_3_4', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="mat-item">
+              <span class="mat-title">7/8" (22 mm)</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('p_7_8', -1)">-</button>
+                <input type="number" id="mat_p_7_8" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('p_7_8', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="mat-item">
+              <span class="mat-title">28 mm</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('p_28', -1)">-</button>
+                <input type="number" id="mat_p_28" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('p_28', 1)">+</button>
+              </div>
+            </div>
+
+            <div style="font-size: 11px; font-weight: 800; color: #c084fc; margin: 12px 0 8px; text-transform: uppercase;">2. Montaža elemenata (komada):</div>
+
+            <div class="mat-item">
+              <span class="mat-title">Montaža češljeva za cijevi</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('comb_mounts', -1)">-</button>
+                <input type="number" id="mat_comb_mounts" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('comb_mounts', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="mat-item">
+              <span class="mat-title">Montaža račvi za instalacije</span>
+              <div class="counter-box">
+                <button type="button" class="btn-step" onclick="stepMat('branch_mounts', -1)">-</button>
+                <input type="number" id="mat_branch_mounts" class="input-step" placeholder="0">
+                <button type="button" class="btn-step" onclick="stepMat('branch_mounts', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="saveWorkEntry()" style="margin-top: 8px;">
+          💾 Spremi radni dan
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= 3. WORKER VIEW: KALENDAR ================= -->
+    <div id="viewWorkerCalendar" style="display: none;">
+      <div class="card">
+        <div class="cal-header">
+          <button class="btn btn-sub btn-sm" onclick="changeMonth(-1)">◀ Prethodni</button>
+          <div style="font-weight: 800; font-size: 14px;" id="calMonthTitle">Listopad 2026</div>
+          <button class="btn btn-sub btn-sm" onclick="changeMonth(1)">Sljedeći ▶</button>
+        </div>
+
+        <div class="cal-weekdays">
+          <div>Pon</div><div>Uto</div><div>Sri</div><div>Čet</div><div>Pet</div><div>Sub</div><div>Ned</div>
+        </div>
+
+        <div class="cal-grid" id="calendarGridBox"></div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; font-size: 11px; margin-top: 14px;">
+          <span style="color: #34d399;">● Rad</span>
+          <span style="color: #38bdf8;">● GO</span>
+          <span style="color: #fbbf24;">● Bolovanje</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 4. ADMIN VIEW: SVI UNOSI ================= -->
+    <div id="viewAdminAll" style="display: none;">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h2 style="font-size: 16px; font-weight: 800;">Svi unosi radnika</h2>
+          <button class="btn btn-emerald btn-sm" onclick="exportAdminCSV()">📊 Izvoz Excel</button>
+        </div>
+        <div id="adminEntriesList"></div>
+      </div>
+    </div>
+
+    <!-- ================= 5. ADMIN VIEW: ANALITIKA MATERIJALA ================= -->
+    <div id="viewAdminMaterial" style="display: none;">
+      <div class="card">
+        <h2 style="font-size: 16px; font-weight: 800; margin-bottom: 8px;">Zbrajanje utrošenog materijala</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">Automatski obračun za izradu situacija i računa investitoru</p>
+
+        <!-- Quick range filter tabs -->
+        <div style="display: flex; gap: 6px; margin-bottom: 12px;">
+          <button class="btn btn-sub btn-sm" id="matFilterToday" onclick="setMatFilter('today')">Danas</button>
+          <button class="btn btn-sub btn-sm" id="matFilterWeek" onclick="setMatFilter('week')">Ovaj tjedan</button>
+          <button class="btn btn-sub btn-sm btn-purple" id="matFilterMonth" onclick="setMatFilter('month')">Ovaj mjesec</button>
+          <button class="btn btn-sub btn-sm" id="matFilterAll" onclick="setMatFilter('all')">Sve</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
+          <div>
+            <label class="form-label">Datum Od</label>
+            <input type="date" id="matFilterDateFrom" class="form-input" onchange="applyCustomMatFilter()">
+          </div>
+          <div>
+            <label class="form-label">Datum Do</label>
+            <input type="date" id="matFilterDateTo" class="form-input" onchange="applyCustomMatFilter()">
+          </div>
+        </div>
+
+        <!-- Big stats summary cards -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+          <div style="background: rgba(2, 132, 199, 0.15); border: 1px solid rgba(2, 132, 199, 0.4); border-radius: 14px; padding: 12px; text-align: center;">
+            <div style="font-size: 11px; color: #7dd3fc; font-weight: 700;">Ukupno cijevi</div>
+            <div style="font-size: 22px; font-weight: 900; color: #38bdf8;" id="sumTotalPipesMeters">0 m</div>
+          </div>
+          <div style="background: rgba(147, 51, 234, 0.15); border: 1px solid rgba(147, 51, 234, 0.4); border-radius: 14px; padding: 12px; text-align: center;">
+            <div style="font-size: 11px; color: #d8b4fe; font-weight: 700;">Montirani elementi</div>
+            <div style="font-size: 22px; font-weight: 900; color: #c084fc;" id="sumTotalFittingsCount">0 kom</div>
+          </div>
+        </div>
+
+        <div id="materialDetailedBreakdown"></div>
+      </div>
+    </div>
+
+    <!-- ================= 6. ADMIN VIEW: UPRAVLJANJE DJELATNICIMA ================= -->
+    <div id="viewAdminWorkers" style="display: none;">
+      <div class="card">
+        <h2 style="font-size: 16px; font-weight: 800; margin-bottom: 14px;">Dodaj novog djelatnika</h2>
+        <form onsubmit="handleAddNewWorker(event)">
+          <div class="form-group">
+            <label class="form-label">Ime i Prezime</label>
+            <input type="text" id="newWorkerName" required class="form-input" placeholder="npr. Luka Marić">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="form-group">
+              <label class="form-label">Korisničko ime</label>
+              <input type="text" id="newWorkerUsername" required class="form-input" placeholder="luka">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lozinka</label>
+              <input type="text" id="newWorkerPassword" required class="form-input" placeholder="123456">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-purple">➕ Spremi i kreiraj račun</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 12px;">Popis aktivnih djelatnika</h3>
+        <div id="adminWorkersList"></div>
+      </div>
+    </div>
+
+  </div> <!-- /app-container -->
+
+  <!-- Bottom Nav Bar (Logged In) -->
+  <nav class="bottom-nav" id="appBottomNav" style="display: none;">
+    <!-- Worker tabs -->
+    <button class="nav-btn active" id="navWorkerEntry" onclick="switchTab('worker-entry')">
+      <span class="nav-icon">➕</span>
+      <span>Unos</span>
+    </button>
+    <button class="nav-btn" id="navWorkerCal" onclick="switchTab('worker-cal')">
+      <span class="nav-icon">📅</span>
+      <span>Kalendar</span>
+    </button>
+
+    <!-- Admin only tabs -->
+    <button class="nav-btn" id="navAdminAll" onclick="switchTab('admin-all')" style="display: none;">
+      <span class="nav-icon">👥</span>
+      <span>Svi unosi</span>
+    </button>
+    <button class="nav-btn" id="navAdminMat" onclick="switchTab('admin-mat')" style="display: none;">
+      <span class="nav-icon">📊</span>
+      <span>Materijal</span>
+    </button>
+    <button class="nav-btn" id="navAdminWorkers" onclick="switchTab('admin-workers')" style="display: none;">
+      <span class="nav-icon">⚙️</span>
+      <span>Djelatnici</span>
+    </button>
+  </nav>
+
+  <!-- ================= MODAL: DETALJI DANA (KALENDAR) ================= -->
+  <div class="modal-backdrop" id="modalDayDetail">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 16px; font-weight: 800;" id="modalDayTitle">Detalji za dan</h3>
+        <button class="btn btn-sub btn-sm" onclick="closeDayModal()">✕</button>
+      </div>
+      <div id="modalDayContent"></div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: PODACI O TVRTCI ================= -->
+  <div class="modal-backdrop" id="modalCompanyInfo">
+    <div class="modal-card" style="max-width: 380px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--card-border); pb: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(2, 132, 199, 0.2); border: 1px solid rgba(56, 189, 248, 0.4); display: flex; align-items: center; justify-content: center; font-size: 16px;">
+            🏢
+          </div>
+          <div>
+            <h3 style="font-size: 15px; font-weight: 900; color: #ffffff;">Podaci o tvrtki</h3>
+            <p style="font-size: 11px; color: var(--text-muted);">Službeni podaci za poslovanje</p>
+          </div>
+        </div>
+        <button class="btn btn-sub btn-sm" onclick="closeCompanyModal()" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 10px;">✕</button>
+      </div>
+
+      <div style="background: #0b1120; border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; margin-bottom: 14px; space-y: 10px;">
+        <div style="margin-bottom: 10px;">
+          <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px;">Naziv tvrtke</div>
+          <div style="font-size: 15px; font-weight: 900; color: #38bdf8;">Deltum d.o.o.</div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+          <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px;">Sjedište i adresa</div>
+          <div style="font-size: 13px; font-weight: 700; color: #f1f5f9;">Đure Sudete 5</div>
+          <div style="font-size: 13px; font-weight: 700; color: #f1f5f9;">48326 Virje</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; pt: 8px; border-top: 1px solid rgba(255,255,255,0.06);">
+          <div>
+            <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px;">OIB</div>
+            <div style="font-size: 13px; font-weight: 900; color: #ffffff; font-family: monospace;">40386639373</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px;">PDV ID</div>
+            <div style="font-size: 13px; font-weight: 900; color: #38bdf8; font-family: monospace;">HR40386639373</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button type="button" class="btn btn-sub btn-sm" onclick="copyCompanyInfo()" style="flex: 1; padding: 10px;">
+          📋 Kopiraj podatke
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="closeCompanyModal()" style="flex: 1; padding: 10px;">
+          U redu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: UREĐIVANJE DJELATNIKA ================= -->
+  <div class="modal-backdrop" id="modalEditWorker">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 16px; font-weight: 800;">Uredi podatke djelatnika</h3>
+        <button class="btn btn-sub btn-sm" onclick="closeEditWorkerModal()">✕</button>
+      </div>
+      <form onsubmit="handleSaveEditedWorker(event)">
+        <input type="hidden" id="editWorkerOldUsername">
+        <div class="form-group">
+          <label class="form-label">Ime i Prezime</label>
+          <input type="text" id="editWorkerName" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Korisničko ime</label>
+          <input type="text" id="editWorkerUsername" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lozinka</label>
+          <input type="text" id="editWorkerPassword" required class="form-input">
+        </div>
+        <button type="submit" class="btn btn-purple">Spremi izmjene</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Pure JavaScript Logic -->
+  <script>
+    // System Data & Local Storage state
+    const STORAGE_KEY_USERS = 'radni_sati_users_v2';
+    const STORAGE_KEY_ENTRIES = 'radni_sati_entries_v2';
+    const STORAGE_KEY_SESSION = 'radni_sati_session_v2';
+
+    // Pipe sizes definition
+    const PIPE_ITEMS = [
+      { id: 'p_1_4', label: '1/4" (6 mm)', unit: 'm' },
+      { id: 'p_3_8', label: '3/8" (9 mm)', unit: 'm' },
+      { id: 'p_1_2', label: '1/2" (12 mm)', unit: 'm' },
+      { id: 'p_5_8', label: '5/8" (15 mm)', unit: 'm' },
+      { id: 'p_3_4', label: '3/4" (19 mm)', unit: 'm' },
+      { id: 'p_7_8', label: '7/8" (22 mm)', unit: 'm' },
+      { id: 'p_28', label: '28 mm', unit: 'm' }
+    ];
+
+    const FITTING_ITEMS = [
+      { id: 'comb_mounts', label: 'Montaža češljeva za freonske cijevi', unit: 'kom' },
+      { id: 'branch_mounts', label: 'Montaža račvi za freonske instalacije', unit: 'kom' }
+    ];
+
+    // Seed Data: Users
+    const DEFAULT_USERS = [
+      { name: 'Uprava / Direktor', username: 'admin', password: '2026', role: 'admin' },
+      { name: 'Dejan Cikoš', username: 'dejan', password: '123', role: 'worker' },
+      { name: 'Ivan Horvat', username: 'ivan', password: '123', role: 'worker' },
+      { name: 'Marko Kovač', username: 'marko', password: '123', role: 'worker' }
+    ];
+
+    // Seed Data: Sample Entries for Dejan Cikoš & colleagues
+    const DEFAULT_ENTRIES = [
+      {
+        id: 'entry_1',
+        workerUsername: 'dejan',
+        workerName: 'Dejan Cikoš',
+        date: '2026-10-20',
+        hours: 8,
+        status: 'regular',
+        location: 'Hotel Park - VRF Sustav',
+        description: 'Polaganje freonskih instalacija u sobama 201-205.',
+        materials: { p_1_4: 35, p_3_8: 35, branch_mounts: 2 },
+        teamNote: ''
+      },
+      {
+        id: 'entry_2',
+        workerUsername: 'dejan',
+        workerName: 'Dejan Cikoš',
+        date: '2026-10-21',
+        hours: 10,
+        status: 'regular',
+        location: 'Poslovni centar Zapad',
+        description: 'Montaža češljeva i vertikalni usponi.',
+        materials: { p_1_2: 24, p_5_8: 24, comb_mounts: 3 },
+        teamNote: 'Rad u timu s: Ivan Horvat'
+      },
+      {
+        id: 'entry_3',
+        workerUsername: 'ivan',
+        workerName: 'Ivan Horvat',
+        date: '2026-10-21',
+        hours: 10,
+        status: 'regular',
+        location: 'Poslovni centar Zapad',
+        description: 'Montaža češljeva i vertikalni usponi.',
+        materials: { p_1_2: 24, p_5_8: 24, comb_mounts: 3 },
+        teamNote: 'Rad u timu s: Dejan Cikoš'
+      },
+      {
+        id: 'entry_4',
+        workerUsername: 'dejan',
+        workerName: 'Dejan Cikoš',
+        date: '2026-10-22',
+        hours: 8,
+        status: 'vacation',
+        location: 'Godišnji odmor',
+        description: 'Korištenje godišnjeg odmora',
+        materials: {},
+        teamNote: ''
+      }
+    ];
+
+    // App State
+    let users = [];
+    let entries = [];
+    let currentUser = null;
+    let currentEntryStatus = 'regular';
+    let selectedColleagues = [];
+    let currentCalDate = new Date();
+    let currentMatPeriod = 'month';
+
+    // Initialize App
+    function initApp() {
+      // Load users
+      const savedUsers = localStorage.getItem(STORAGE_KEY_USERS);
+      users = savedUsers ? JSON.parse(savedUsers) : [...DEFAULT_USERS];
+      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
+
+      // Load entries
+      const savedEntries = localStorage.getItem(STORAGE_KEY_ENTRIES);
+      entries = savedEntries ? JSON.parse(savedEntries) : [...DEFAULT_ENTRIES];
+      localStorage.setItem(STORAGE_KEY_ENTRIES, JSON.stringify(entries));
+
+      // Set today's date in entry form
+      const todayISO = new Date().toISOString().split('T')[0];
+      const entryDateEl = document.getElementById('entryDate');
+      if (entryDateEl) entryDateEl.value = todayISO;
+
+      // Auto-restore session if available
+      const savedSession = localStorage.getItem(STORAGE_KEY_SESSION);
+      if (savedSession) {
+        currentUser = JSON.parse(savedSession);
+        renderAppForUser();
+      } else {
+        showLoginView();
+      }
+    }
+
+    // Toast message helper
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    // Company Modal Functions
+    function openCompanyModal() {
+      document.getElementById('modalCompanyInfo').classList.add('show');
+    }
+
+    function closeCompanyModal() {
+      document.getElementById('modalCompanyInfo').classList.remove('show');
+    }
+
+    function copyCompanyInfo() {
+      const text = `Deltum d.o.o.\nĐure Sudete 5\n48326 Virje\nOIB: 40386639373\nPDV ID: HR40386639373`;
+      const tempArea = document.createElement('textarea');
+      tempArea.value = text;
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempArea);
+      showToast('Podaci tvrtke kopirani!');
+    }
+
+    // Quick Login
+    function quickLogin(uname, pass) {
+      document.getElementById('loginUsername').value = uname;
+      document.getElementById('loginPassword').value = pass;
+      performLogin(uname, pass);
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const uname = document.getElementById('loginUsername').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+      performLogin(uname, pass);
+    }
+
+    function performLogin(uname, pass) {
+      const user = users.find(u => u.username.toLowerCase() === uname.toLowerCase() && u.password === pass);
+      const errEl = document.getElementById('loginError');
+
+      if (!user) {
+        errEl.innerText = 'Neispravno korisničko ime ili lozinka.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      errEl.style.display = 'none';
+      currentUser = user;
+      localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(user));
+      renderAppForUser();
+      showToast(`Dobrodošli, ${user.name}!`);
+    }
+
+    function logoutUser() {
+      currentUser = null;
+      localStorage.removeItem(STORAGE_KEY_SESSION);
+      showLoginView();
+    }
+
+    function showLoginView() {
+      document.getElementById('viewLogin').style.display = 'block';
+      document.getElementById('viewWorkerEntry').style.display = 'none';
+      document.getElementById('viewWorkerCalendar').style.display = 'none';
+      document.getElementById('viewAdminAll').style.display = 'none';
+      document.getElementById('viewAdminMaterial').style.display = 'none';
+      document.getElementById('viewAdminWorkers').style.display = 'none';
+      document.getElementById('appHeader').style.display = 'none';
+      document.getElementById('appBottomNav').style.display = 'none';
+    }
+
+    function renderAppForUser() {
+      document.getElementById('viewLogin').style.display = 'none';
+      document.getElementById('appHeader').style.display = 'flex';
+      document.getElementById('appBottomNav').style.display = 'flex';
+
+      document.getElementById('headerUserName').innerText = currentUser.name;
+      document.getElementById('headerUserSubtitle').innerText = currentUser.role === 'admin' ? 'Voditelj poslovanja' : 'Djelatnik';
+      
+      const badge = document.getElementById('headerRoleBadge');
+      badge.innerText = currentUser.role === 'admin' ? 'Voditelj' : 'Radnik';
+      badge.className = 'user-badge ' + (currentUser.role === 'admin' ? 'badge-admin' : 'badge-worker');
+
+      // Adjust tabs visibility based on role
+      const isAdmin = currentUser.role === 'admin';
+      document.getElementById('navAdminAll').style.display = isAdmin ? 'flex' : 'none';
+      document.getElementById('navAdminMat').style.display = isAdmin ? 'flex' : 'none';
+      document.getElementById('navAdminWorkers').style.display = isAdmin ? 'flex' : 'none';
+
+      // Setup team chips for entry form
+      renderColleagueChips();
+
+      if (isAdmin) {
+        switchTab('admin-mat');
+      } else {
+        switchTab('worker-entry');
+      }
+    }
+
+    function switchTab(tabId) {
+      // Hide all tabs
+      document.getElementById('viewWorkerEntry').style.display = 'none';
+      document.getElementById('viewWorkerCalendar').style.display = 'none';
+      document.getElementById('viewAdminAll').style.display = 'none';
+      document.getElementById('viewAdminMaterial').style.display = 'none';
+      document.getElementById('viewAdminWorkers').style.display = 'none';
+
+      // Reset nav classes
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'active-admin'));
+
+      if (tabId === 'worker-entry') {
+        document.getElementById('viewWorkerEntry').style.display = 'block';
+        document.getElementById('navWorkerEntry').classList.add('active');
+        calculateWorkerMonthlyHours();
+      } else if (tabId === 'worker-cal') {
+        document.getElementById('viewWorkerCalendar').style.display = 'block';
+        document.getElementById('navWorkerCal').classList.add('active');
+        renderCalendar();
+      } else if (tabId === 'admin-all') {
+        document.getElementById('viewAdminAll').style.display = 'block';
+        document.getElementById('navAdminAll').classList.add('active-admin');
+        renderAdminEntriesList();
+      } else if (tabId === 'admin-mat') {
+        document.getElementById('viewAdminMaterial').style.display = 'block';
+        document.getElementById('navAdminMat').classList.add('active-admin');
+        setMatFilter(currentMatPeriod);
+      } else if (tabId === 'admin-workers') {
+        document.getElementById('viewAdminWorkers').style.display = 'block';
+        document.getElementById('navAdminWorkers').classList.add('active-admin');
+        renderAdminWorkersList();
+      }
+    }
+
+    // Status Selection (Regular, Vacation, Sick)
+    function setEntryStatus(status) {
+      currentEntryStatus = status;
+      document.getElementById('chipRegular').className = 'status-chip ' + (status === 'regular' ? 'selected-regular' : '');
+      document.getElementById('chipVacation').className = 'status-chip ' + (status === 'vacation' ? 'selected-vacation' : '');
+      document.getElementById('chipSick').className = 'status-chip ' + (status === 'sick' ? 'selected-sick' : '');
+
+      const locInput = document.getElementById('entryLocation');
+      const descInput = document.getElementById('entryDescription');
+      const matSection = document.getElementById('materialSection');
+      const teamSection = document.getElementById('colleaguesSection');
+
+      if (status === 'vacation') {
+        locInput.value = 'Godišnji odmor';
+        descInput.value = 'Korištenje godišnjeg odmora';
+        matSection.style.display = 'none';
+        teamSection.style.display = 'none';
+      } else if (status === 'sick') {
+        locInput.value = 'Bolovanje';
+        descInput.value = 'Privremena nesposobnost za rad';
+        matSection.style.display = 'none';
+        teamSection.style.display = 'none';
+      } else {
+        if (locInput.value === 'Godišnji odmor' || locInput.value === 'Bolovanje') locInput.value = '';
+        if (descInput.value === 'Korištenje godišnjeg odmora' || descInput.value === 'Privremena nesposobnost za rad') descInput.value = '';
+        matSection.style.display = 'block';
+        teamSection.style.display = 'block';
+      }
+    }
+
+    // Hours Selection (1 - 12)
+    function selectHours(h) {
+      document.getElementById('entryHours').value = h;
+      document.querySelectorAll('.hour-chip').forEach(c => {
+        c.classList.toggle('selected', parseInt(c.innerText) === h);
+      });
+    }
+
+    // Material Accordion
+    function toggleMaterialAccordion() {
+      const box = document.getElementById('materialInputsBox');
+      const indicator = document.getElementById('matAccordionIndicator');
+      const isOpen = box.style.display === 'block';
+      box.style.display = isOpen ? 'none' : 'block';
+      indicator.innerText = isOpen ? '+ Prikaži' : '- Sakrij';
+    }
+
+    // Step Material value (+ / -)
+    function stepMat(id, delta) {
+      const el = document.getElementById('mat_' + id);
+      const cur = parseFloat(el.value) || 0;
+      const next = Math.max(0, cur + delta);
+      el.value = next === 0 ? '' : next;
+    }
+
+    // Render colleague tags for entry
+    function renderColleagueChips() {
+      const container = document.getElementById('colleagueChipsContainer');
+      container.innerHTML = '';
+      selectedColleagues = [];
+
+      users.filter(u => u.role === 'worker' && u.username !== currentUser.username).forEach(worker => {
+        const chip = document.createElement('div');
+        chip.className = 'colleague-chip';
+        chip.innerText = '+ ' + worker.name;
+        chip.onclick = function() {
+          const idx = selectedColleagues.indexOf(worker.username);
+          if (idx === -1) {
+            selectedColleagues.push(worker.username);
+            chip.classList.add('selected');
+            chip.innerText = '✓ ' + worker.name;
+          } else {
+            selectedColleagues.splice(idx, 1);
+            chip.classList.remove('selected');
+            chip.innerText = '+ ' + worker.name;
+          }
+        };
+        container.appendChild(chip);
+      });
+    }
+
+    // Save Work Entry (with auto-sync for colleagues)
+    function saveWorkEntry() {
+      const date = document.getElementById('entryDate').value;
+      const hours = parseFloat(document.getElementById('entryHours').value) || 0;
+      const location = document.getElementById('entryLocation').value.trim();
+      const description = document.getElementById('entryDescription').value.trim();
+
+      if (!date) { showToast('Odaberite datum.'); return; }
+      if (hours <= 0) { showToast('Upišite broj sati.'); return; }
+      if (!location) { showToast('Upišite mjesto rada.'); return; }
+
+      // Read materials
+      const materials = {};
+      PIPE_ITEMS.concat(FITTING_ITEMS).forEach(item => {
+        const val = parseFloat(document.getElementById('mat_' + item.id).value) || 0;
+        if (val > 0) materials[item.id] = val;
+      });
+
+      // Target workers: currentUser + all selected colleagues
+      const targetUsernames = [currentUser.username, ...selectedColleagues];
+
+      let teamNote = '';
+      if (selectedColleagues.length > 0) {
+        const names = targetUsernames.map(u => {
+          const found = users.find(x => x.username === u);
+          return found ? found.name : u;
+        }).join(' + ');
+        teamNote = 'Rad u timu: ' + names;
+      }
+
+      targetUsernames.forEach(uname => {
+        const userObj = users.find(u => u.username === uname);
+        const newEntry = {
+          id: 'ent_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+          workerUsername: uname,
+          workerName: userObj ? userObj.name : uname,
+          date,
+          hours,
+          status: currentEntryStatus,
+          location,
+          description: description || (currentEntryStatus === 'regular' ? 'Redovan rad' : (currentEntryStatus === 'vacation' ? 'Godišnji odmor' : 'Bolovanje')),
+          materials: { ...materials },
+          teamNote
+        };
+        entries.unshift(newEntry);
+      });
+
+      localStorage.setItem(STORAGE_KEY_ENTRIES, JSON.stringify(entries));
+      showToast(selectedColleagues.length > 0 ? `Uneseno za vas i ${selectedColleagues.length} kolega!` : 'Radni dan uspješno spremljen!');
+
+      // Reset form
+      document.getElementById('entryLocation').value = '';
+      document.getElementById('entryDescription').value = '';
+      PIPE_ITEMS.concat(FITTING_ITEMS).forEach(item => {
+        document.getElementById('mat_' + item.id).value = '';
+      });
+      renderColleagueChips();
+      calculateWorkerMonthlyHours();
+    }
+
+    // Calculate monthly hours for worker ticker
+    function calculateWorkerMonthlyHours() {
+      const curMonth = new Date().toISOString().substring(0, 7);
+      const total = entries
+        .filter(e => e.workerUsername === currentUser.username && e.date.startsWith(curMonth))
+        .reduce((sum, e) => sum + (parseFloat(e.hours) || 0), 0);
+      document.getElementById('workerTotalHoursMonth').innerText = total + ' h';
+    }
+
+    // ================= CALENDAR RENDERING =================
+    function changeMonth(delta) {
+      currentCalDate.setMonth(currentCalDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendarGridBox');
+      grid.innerHTML = '';
+
+      const year = currentCalDate.getFullYear();
+      const month = currentCalDate.getMonth();
+
+      const monthNames = ['Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj', 'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'];
+      document.getElementById('calMonthTitle').innerText = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1);
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Monday is 0, Sunday is 6
+      let startDay = firstDay.getDay() - 1;
+      if (startDay === -1) startDay = 6;
+
+      // Empty lead cells
+      for (let i = 0; i < startDay; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell empty';
+        grid.appendChild(cell);
+      }
+
+      const todayISO = new Date().toISOString().split('T')[0];
+
+      // Month days
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayStr = String(d).padStart(2, '0');
+        const monthStr = String(month + 1).padStart(2, '0');
+        const iso = `${year}-${monthStr}-${dayStr}`;
+
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell' + (iso === todayISO ? ' today' : '');
+        cell.onclick = () => openDayDetailModal(iso);
+
+        const numSpan = document.createElement('div');
+        numSpan.style.fontWeight = '800';
+        numSpan.innerText = d;
+        cell.appendChild(numSpan);
+
+        // Find worker's entries on this day
+        const dayEntries = entries.filter(e => e.workerUsername === currentUser.username && e.date === iso);
+        if (dayEntries.length > 0) {
+          const totH = dayEntries.reduce((s, e) => s + (parseFloat(e.hours) || 0), 0);
+          const hasVac = dayEntries.some(e => e.status === 'vacation');
+          const hasSick = dayEntries.some(e => e.status === 'sick');
+
+          const tag = document.createElement('div');
+          tag.className = 'cal-tag ' + (hasVac ? 'tag-vac' : (hasSick ? 'tag-sick' : 'tag-reg'));
+          tag.innerText = hasVac ? `GO ${totH}h` : (hasSick ? `BO ${totH}h` : `${totH}h`);
+          cell.appendChild(tag);
+        }
+
+        grid.appendChild(cell);
+      }
+    }
+
+    // Day details popup modal (with working delete option)
+    function openDayDetailModal(isoDate) {
+      const modal = document.getElementById('modalDayDetail');
+      document.getElementById('modalDayTitle').innerText = 'Evidencija: ' + isoDate;
+      const box = document.getElementById('modalDayContent');
+      box.innerHTML = '';
+
+      const dayEntries = entries.filter(e => e.workerUsername === currentUser.username && e.date === isoDate);
+
+      if (dayEntries.length === 0) {
+        box.innerHTML = `
+          <div style="text-align: center; padding: 20px 0; color: var(--text-muted); font-size: 13px;">
+            Nema upisanih radnih sati za ovaj datum.
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="quickFillDate('${isoDate}')" style="width: 100%;">
+            ➕ Upiši sate za ovaj dan
+          </button>
+        `;
+      } else {
+        dayEntries.forEach(entry => {
+          const card = document.createElement('div');
+          card.style.background = '#0b1120';
+          card.style.border = '1px solid var(--card-border)';
+          card.style.borderRadius = '14px';
+          card.style.padding = '12px';
+          card.style.marginBottom = '8px';
+
+          let matHtml = '';
+          const m = entry.materials || {};
+          const mats = [];
+          PIPE_ITEMS.concat(FITTING_ITEMS).forEach(item => {
+            if (m[item.id] > 0) mats.push(`${item.label}: ${m[item.id]} ${item.unit}`);
+          });
+          if (mats.length > 0) {
+            matHtml = `<div style="font-size: 11px; color: #38bdf8; margin-top: 6px; background: rgba(2, 132, 199, 0.1); padding: 6px; border-radius: 8px;">
+              <strong>Ugrađeno:</strong> ${mats.join(', ')}
+            </div>`;
+          }
+
+          card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div>
+                <div style="font-size: 13px; font-weight: 800;">${entry.location}</div>
+                <div style="font-size: 11px; color: var(--text-muted);">${entry.description}</div>
+              </div>
+              <div style="background: rgba(2, 132, 199, 0.2); color: #38bdf8; font-weight: 800; padding: 4px 8px; border-radius: 8px; font-size: 12px;">
+                ${entry.hours} h
+              </div>
+            </div>
+            ${entry.teamNote ? `<div style="font-size: 10px; color: #a78bfa; margin-top: 4px;">👥 ${entry.teamNote}</div>` : ''}
+            ${matHtml}
+            <div style="display: flex; justify-content: flex-end; margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--card-border);">
+              <button class="btn btn-danger btn-sm" onclick="deleteEntry('${entry.id}', '${isoDate}')">🗑️ Obriši unos</button>
+            </div>
+          `;
+          box.appendChild(card);
+        });
+      }
+
+      modal.classList.add('show');
+    }
+
+    function closeDayModal() {
+      document.getElementById('modalDayDetail').classList.remove('show');
+    }
+
+    function quickFillDate(isoDate) {
+      closeDayModal();
+      switchTab('worker-entry');
+      document.getElementById('entryDate').value = isoDate;
+    }
+
+    function deleteEntry(entryId, isoDate) {
+      entries = entries.filter(e => e.id !== entryId);
+      localStorage.setItem(STORAGE_KEY_ENTRIES, JSON.stringify(entries));
+      showToast('Unos uspješno obrisan!');
+      renderCalendar();
+      calculateWorkerMonthlyHours();
+      openDayDetailModal(isoDate); // Refresh modal view
+    }
+
+    // ================= ADMIN: SVI UNOSI =================
+    function renderAdminEntriesList() {
+      const container = document.getElementById('adminEntriesList');
+      container.innerHTML = '';
+
+      if (entries.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">Nema zabilježenih unosa.</div>';
+        return;
+      }
+
+      entries.forEach(e => {
+        const item = document.createElement('div');
+        item.style.background = '#0b1120';
+        item.style.border = '1px solid var(--card-border)';
+        item.style.borderRadius = '14px';
+        item.style.padding = '12px';
+        item.style.marginBottom = '8px';
+
+        let matHtml = '';
+        const m = e.materials || {};
+        const mats = [];
+        PIPE_ITEMS.concat(FITTING_ITEMS).forEach(it => {
+          if (m[it.id] > 0) mats.push(`${it.label}: ${m[it.id]} ${it.unit}`);
+        });
+        if (mats.length > 0) {
+          matHtml = `<div style="font-size: 11px; color: #38bdf8; margin-top: 4px;"><strong>Ugrađeno:</strong> ${mats.join(', ')}</div>`;
+        }
+
+        item.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+              <div style="font-size: 13px; font-weight: 800; color: #fff;">${e.workerName}</div>
+              <div style="font-size: 11px; color: #94a3b8;">${e.date} &bull; ${e.location}</div>
+            </div>
+            <div style="font-size: 13px; font-weight: 800; color: #38bdf8;">${e.hours} h</div>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${e.description}</div>
+          ${e.teamNote ? `<div style="font-size: 10px; color: #a78bfa; margin-top: 2px;">👥 ${e.teamNote}</div>` : ''}
+          ${matHtml}
+          <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+            <button class="btn btn-sub btn-sm" onclick="adminDeleteEntry('${e.id}')" style="color: #f87171; font-size: 11px;">🗑️ Ukloni</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function adminDeleteEntry(id) {
+      entries = entries.filter(e => e.id !== id);
+      localStorage.setItem(STORAGE_KEY_ENTRIES, JSON.stringify(entries));
+      showToast('Unos uklonjen.');
+      renderAdminEntriesList();
+    }
+
+    // ================= ADMIN: ANALITIKA MATERIJALA =================
+    function setMatFilter(period) {
+      currentMatPeriod = period;
+      document.querySelectorAll('#matFilterToday, #matFilterWeek, #matFilterMonth, #matFilterAll').forEach(b => b.className = 'btn btn-sub btn-sm');
+      
+      const today = new Date();
+      let fromDate = new Date();
+      let toDate = new Date();
+
+      if (period === 'today') {
+        document.getElementById('matFilterToday').classList.add('btn-purple');
+      } else if (period === 'week') {
+        document.getElementById('matFilterWeek').classList.add('btn-purple');
+        const day = today.getDay() || 7;
+        fromDate.setDate(today.getDate() - day + 1);
+      } else if (period === 'month') {
+        document.getElementById('matFilterMonth').classList.add('btn-purple');
+        fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      } else if (period === 'all') {
+        document.getElementById('matFilterAll').classList.add('btn-purple');
+        fromDate = new Date(2020, 0, 1);
+      }
+
+      document.getElementById('matFilterDateFrom').value = fromDate.toISOString().split('T')[0];
+      document.getElementById('matFilterDateTo').value = toDate.toISOString().split('T')[0];
+      calculateMaterialStats();
+    }
+
+    function applyCustomMatFilter() {
+      calculateMaterialStats();
+    }
+
+    function calculateMaterialStats() {
+      const fromStr = document.getElementById('matFilterDateFrom').value;
+      const toStr = document.getElementById('matFilterDateTo').value;
+
+      const filtered = entries.filter(e => {
+        if (!e.date) return false;
+        if (fromStr && e.date < fromStr) return false;
+        if (toStr && e.date > toStr) return false;
+        return true;
+      });
+
+      // Sum pipes
+      let totalPipesMeters = 0;
+      const pipeSums = {};
+      PIPE_ITEMS.forEach(p => {
+        let sum = 0;
+        filtered.forEach(e => {
+          if (e.materials && e.materials[p.id]) sum += parseFloat(e.materials[p.id]) || 0;
+        });
+        pipeSums[p.id] = sum;
+        totalPipesMeters += sum;
+      });
+
+      // Sum fittings
+      let totalFittingsCount = 0;
+      const fittingSums = {};
+      FITTING_ITEMS.forEach(f => {
+        let sum = 0;
+        filtered.forEach(e => {
+          if (e.materials && e.materials[f.id]) sum += parseFloat(e.materials[f.id]) || 0;
+        });
+        fittingSums[f.id] = sum;
+        totalFittingsCount += sum;
+      });
+
+      document.getElementById('sumTotalPipesMeters').innerText = totalPipesMeters + ' m';
+      document.getElementById('sumTotalFittingsCount').innerText = totalFittingsCount + ' kom';
+
+      // Breakdown Box
+      const box = document.getElementById('materialDetailedBreakdown');
+      box.innerHTML = `
+        <div style="font-size: 12px; font-weight: 800; color: #7dd3fc; margin-bottom: 8px; text-transform: uppercase;">
+          Specifikacija freonskih cijevi (metara):
+        </div>
+      `;
+
+      PIPE_ITEMS.forEach(p => {
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.justifyContent = 'space-between';
+        row.style.padding = '8px 10px';
+        row.style.background = '#0b1120';
+        row.style.border = '1px solid var(--card-border)';
+        row.style.borderRadius = '10px';
+        row.style.marginBottom = '4px';
+        row.style.fontSize = '12px';
+        row.innerHTML = `<span>${p.label}</span><strong>${pipeSums[p.id]} m</strong>`;
+        box.appendChild(row);
+      });
+
+      const fitHeader = document.createElement('div');
+      fitHeader.style.cssText = 'font-size: 12px; font-weight: 800; color: #c084fc; margin: 14px 0 8px; text-transform: uppercase;';
+      fitHeader.innerText = 'Specifikacija elemenata i montaže (komada):';
+      box.appendChild(fitHeader);
+
+      FITTING_ITEMS.forEach(f => {
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.justifyContent = 'space-between';
+        row.style.padding = '8px 10px';
+        row.style.background = '#0b1120';
+        row.style.border = '1px solid var(--card-border)';
+        row.style.borderRadius = '10px';
+        row.style.marginBottom = '4px';
+        row.style.fontSize = '12px';
+        row.innerHTML = `<span>${f.label}</span><strong>${fittingSums[f.id]} kom</strong>`;
+        box.appendChild(row);
+      });
+    }
+
+    // ================= ADMIN: UPRAVLJANJE DJELATNICIMA =================
+    function handleAddNewWorker(e) {
+      e.preventDefault();
+      const name = document.getElementById('newWorkerName').value.trim();
+      const username = document.getElementById('newWorkerUsername').value.trim().toLowerCase();
+      const password = document.getElementById('newWorkerPassword').value.trim();
+
+      if (users.some(u => u.username.toLowerCase() === username)) {
+        showToast('Korisničko ime već postoji!');
+        return;
+      }
+
+      users.push({ name, username, password, role: 'worker' });
+      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
+
+      document.getElementById('newWorkerName').value = '';
+      document.getElementById('newWorkerUsername').value = '';
+      document.getElementById('newWorkerPassword').value = '';
+
+      showToast(`Djelatnik ${name} uspješno kreiran!`);
+      renderAdminWorkersList();
+      renderColleagueChips();
+    }
+
+    function renderAdminWorkersList() {
+      const container = document.getElementById('adminWorkersList');
+      container.innerHTML = '';
+
+      users.filter(u => u.role === 'worker').forEach(worker => {
+        const item = document.createElement('div');
+        item.style.background = '#0b1120';
+        item.style.border = '1px solid var(--card-border)';
+        item.style.borderRadius = '14px';
+        item.style.padding = '12px';
+        item.style.marginBottom = '8px';
+
+        item.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+              <div style="font-weight: 800; font-size: 14px; color: #fff;">${worker.name}</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Korisničko: <strong>${worker.username}</strong> | Lozinka: <strong>${worker.password}</strong></div>
+            </div>
+            <div style="display: flex; gap: 4px;">
+              <button class="btn btn-sub btn-sm" onclick="openEditWorkerModal('${worker.username}')">✏️ Uredi</button>
+              <button class="btn btn-sub btn-sm" onclick="deleteWorker('${worker.username}')" style="color: #f87171;">🗑️</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function openEditWorkerModal(username) {
+      const worker = users.find(u => u.username === username);
+      if (!worker) return;
+      document.getElementById('editWorkerOldUsername').value = worker.username;
+      document.getElementById('editWorkerName').value = worker.name;
+      document.getElementById('editWorkerUsername').value = worker.username;
+      document.getElementById('editWorkerPassword').value = worker.password;
+      document.getElementById('modalEditWorker').classList.add('show');
+    }
+
+    function closeEditWorkerModal() {
+      document.getElementById('modalEditWorker').classList.remove('show');
+    }
+
+    function handleSaveEditedWorker(e) {
+      e.preventDefault();
+      const oldUname = document.getElementById('editWorkerOldUsername').value;
+      const newName = document.getElementById('editWorkerName').value.trim();
+      const newUname = document.getElementById('editWorkerUsername').value.trim().toLowerCase();
+      const newPass = document.getElementById('editWorkerPassword').value.trim();
+
+      const worker = users.find(u => u.username === oldUname);
+      if (!worker) return;
+
+      worker.name = newName;
+      worker.username = newUname;
+      worker.password = newPass;
+
+      // Cascade update to entries
+      entries.forEach(ent => {
+        if (ent.workerUsername === oldUname) {
+          ent.workerUsername = newUname;
+          ent.workerName = newName;
+        }
+      });
+
+      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
+      localStorage.setItem(STORAGE_KEY_ENTRIES, JSON.stringify(entries));
+
+      closeEditWorkerModal();
+      renderAdminWorkersList();
+      showToast('Podaci djelatnika uspješno ažurirani!');
+    }
+
+    function deleteWorker(username) {
+      users = users.filter(u => u.username !== username);
+      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
+      showToast('Djelatnik obrisan.');
+      renderAdminWorkersList();
+      renderColleagueChips();
+    }
+
+    // Export CSV with diacritics support for Excel
+    function exportAdminCSV() {
+      if (entries.length === 0) { showToast('Nema podataka za izvoz.'); return; }
+
+      const headers = ['Datum', 'Djelatnik', 'Sati', 'Status', 'Mjesto rada', 'Opis posla', '1/4 (m)', '3/8 (m)', '1/2 (m)', '5/8 (m)', '3/4 (m)', '7/8 (m)', '28mm (m)', 'Cesljevi (kom)', 'Racve (kom)'];
+      const rows = entries.map(e => {
+        const m = e.materials || {};
+        return [
+          `"${e.date}"`,
+          `"${e.workerName}"`,
+          `"${e.hours}"`,
+          `"${e.status}"`,
+          `"${(e.location || '').replace(/"/g, '""')}"`,
+          `"${(e.description || '').replace(/"/g, '""')}"`,
+          `"${m.p_1_4 || ''}"`,
+          `"${m.p_3_8 || ''}"`,
+          `"${m.p_1_2 || ''}"`,
+          `"${m.p_5_8 || ''}"`,
+          `"${m.p_3_4 || ''}"`,
+          `"${m.p_7_8 || ''}"`,
+          `"${m.p_28 || ''}"`,
+          `"${m.comb_mounts || ''}"`,
+          `"${m.branch_mounts || ''}"`
+        ];
+      });
+
+      const csv = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Evidencija_Radnih_Sati_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Excel CSV uspješno preuzet!');
+    }
+
+    // Start on load
+    window.onload = initApp;
+  </script>
+</body>
+</html>
