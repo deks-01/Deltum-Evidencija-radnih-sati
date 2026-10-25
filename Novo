@@ -1,0 +1,2076 @@
+<html lang="hr">
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Deltum d.o.o. - Evidencija Radnih Sati i Tehnički Alati</title>
+  
+  <!-- Fontovi & Ikone -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* RESET & SISTEMSKE VARIJABLE */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f172a;
+      --card-sub: #1e293b;
+      --card-border: #334155;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-glow: rgba(2, 132, 199, 0.35);
+      --purple: #9333ea;
+      --purple-hover: #7e22ce;
+      --purple-glow: rgba(147, 51, 234, 0.35);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      padding-bottom: 40px;
+    }
+
+    /* ZAGLAVLJE */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 12px 18px;
+    }
+
+    .header-container {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-sub);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    /* KONTEJNERI & KARTICE */
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 18px 16px;
+      width: 100%;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.45);
+    }
+
+    .card-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* FORME & POLJA */
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--card-sub);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: var(--font-main);
+      font-size: 14px;
+      margin-bottom: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    /* GUMBI */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 12px;
+      font-family: var(--font-main);
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-secondary {
+      background: var(--card-sub);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--rose);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-sm {
+      width: auto;
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    /* NAVIGACIJA TABOVA */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 11px 18px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+
+    /* KALKULATORI & REZULTAT BOX */
+    .result-box {
+      background: linear-gradient(145deg, rgba(2, 132, 199, 0.12), rgba(147, 51, 234, 0.08));
+      border: 1px solid rgba(2, 132, 199, 0.3);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .result-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .result-value {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+
+    /* LISTA RADNIKA & EVIDENCIJA */
+    .log-item {
+      background: var(--card-sub);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .worker-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    @media (min-width: 640px) {
+      .worker-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .worker-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+
+    .action-icon-btn.delete {
+      color: var(--rose);
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+    }
+
+    .badge-primary { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
+    .badge-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    .login-wrapper {
+      min-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MODAL: PODACI O TVRTKI -->
+  <div id="companyModal" class="modal-overlay" onclick="closeCompanyModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:18px; font-weight:800;">Podaci o tvrtki</h3>
+        <button onclick="closeCompanyModal()" style="background:none; border:none; color:var(--text-muted); font-size:24px; cursor:pointer;">&times;</button>
+      </div>
+      <div style="background:var(--card-sub); border:1px solid var(--card-border); border-radius:12px; padding:16px; font-size:13px; line-height:1.8;">
+        <div><strong>Tvrtka:</strong> Deltum d.o.o.</div>
+        <div><strong>Djelatnost:</strong> Klimatizacija, grijanje i elektroinstalacije</div>
+        <div><strong>Sjedište:</strong> Đure Sudete 5, 48326 Virje</div>
+        <div><strong>OIB:</strong> 40386639373</div>
+        <div><strong>PDV ID:</strong> HR40386639373</div>
+      </div>
+      <button class="btn btn-secondary" onclick="copyCompanyInfo()" style="margin-top:14px;">📋 Kopiraj podatke</button>
+    </div>
+  </div>
+
+  <!-- GLAVNO ZAGLAVLJE -->
+  <header>
+    <div class="header-container">
+      <div class="brand-group" onclick="openCompanyModal()">
+        <div class="logo-badge">❄️⚡</div>
+        <div>
+          <div class="brand-title">Deltum d.o.o.</div>
+          <div class="brand-sub">Podaci o tvrtki ⓘ</div>
+        </div>
+      </div>
+      <div id="userHeader" style="display:none;" class="user-pill">
+        <span id="loggedUserName" class="user-name"></span>
+        <button class="btn btn-secondary btn-sm" onclick="logout()">Odjava</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- EKRAN ZA PRIJAVU -->
+  <div id="loginScreen" class="container login-wrapper">
+    <div class="card" style="width:100%; max-width:390px; text-align:center;">
+      <div class="logo-badge" style="margin:0 auto 14px auto;">❄️⚡</div>
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:4px;">Evidencija radnih sati</h2>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Prijava djelatnika i uprave tvrtke</p>
+      
+      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(2, 132, 199, 0.1); border:1px solid rgba(2, 132, 199, 0.3); border-radius:20px; padding:6px 14px; font-size:11px; margin-bottom:20px; cursor:pointer;" onclick="openCompanyModal()">
+        🏢 Deltum d.o.o. • OIB: 40386639373 <span style="color:var(--primary); font-weight:700;">ⓘ Detalji</span>
+      </div>
+
+      <div style="text-align:left;">
+        <label>Korisničko ime</label>
+        <input type="text" id="loginUsername" placeholder="npr. dejan, melita ili alen" autocapitalize="none">
+        
+        <label>Lozinka</label>
+        <input type="password" id="loginPassword" placeholder="Lozinka">
+        
+        <div id="loginError" style="color:var(--rose); font-size:12px; font-weight:700; margin-bottom:12px; display:none;">Neispravno korisničko ime ili lozinka.</div>
+        
+        <button class="btn btn-primary" onclick="handleLogin()">Prijavi se</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLAVNI SADRŽAJ NAKON PRIJAVE -->
+  <main id="appScreen" class="container" style="display:none;">
+    <div class="nav-tabs" id="navTabs">
+      <button class="tab-btn active" onclick="switchTab('unos')">✍️ Novi unos</button>
+      <button class="tab-btn" onclick="switchTab('pregled')">📋 Pregled rada</button>
+      <button class="tab-btn" onclick="switchTab('klima')">❄️ Freon kalkulator</button>
+      <button class="tab-btn" onclick="switchTab('struja')">⚡ Pad napona</button>
+      <button class="tab-btn" onclick="switchTab('materijal')">📦 Šifrarnik</button>
+      <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="switchTab('radnici')">👥 Djelatnici</button>
+    </div>
+
+    <!-- TAB 1: NOVI UNOS RADA -->
+    <section id="tab-unos" class="card">
+      <div class="card-header-line">
+        <h3 class="card-title">✍️ Radni nalog / novi unos</h3>
+        <span class="badge badge-emerald">Aktivan nalog</span>
+      </div>
+      
+      <div class="grid-2">
+        <div>
+          <label>Datum radova</label>
+          <input type="date" id="logDate">
+        </div>
+        <div>
+          <label>Broj odrađenih sati</label>
+          <input type="number" id="logHours" step="0.5" placeholder="8">
+        </div>
+      </div>
+
+      <label>Gradilište / Lokacija / Klijent</label>
+      <input type="text" id="logSite" placeholder="npr. Obiteljska kuća Horvat, Đurđevac ili Virje">
+
+      <label>Kategorija radova</label>
+      <select id="logType">
+        <option value="Montaža klima uređaja">Montaža klima uređaja</option>
+        <option value="Servis i održavanje klima">Servis i održavanje klima</option>
+        <option value="Dizalica topline">Dizalica topline (montaža/puštanje)</option>
+        <option value="Elektroinstalacije - grubi radovi">Elektroinstalacije - grubi radovi (štemanje/cijevi)</option>
+        <option value="Elektroinstalacije - fina montaža">Elektroinstalacije - fina montaža (utičnice/ormari)</option>
+        <option value="Grijanje i vodovodne instalacije">Grijanje i vodovodne instalacije</option>
+        <option value="Hitne intervencije i terenski izvid">Hitne intervencije i terenski izvid</option>
+      </select>
+
+      <label>Utrošeni materijal i tehničke bilješke</label>
+      <textarea id="logMaterials" rows="3" placeholder="npr. 8m Cu cijevi 1/4-3/8, konzola 450mm, 0.45kg R32 freona, 3 automatska osigurača B16..."></textarea>
+
+      <button class="btn btn-primary" onclick="saveWorkLog()">💾 Spremi u bazu</button>
+    </section>
+
+    <!-- TAB 2: PREGLED SVIH RADOVA -->
+    <section id="tab-pregled" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">📋 Povijest i evidencija rada</h3>
+        <button class="btn btn-secondary btn-sm" onclick="exportLogsToText()">📤 Preuzmi sažetak</button>
+      </div>
+      <div id="logsList">Učitavanje podataka...</div>
+    </section>
+
+    <!-- TAB 3: KALKULATOR FREONA -->
+    <section id="tab-klima" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">❄️ Kalkulator nadopune plina (Freon)</h3>
+      </div>
+      
+      <div class="grid-2">
+        <div>
+          <label>Tip rashladnog sredstva</label>
+          <select id="gasType">
+            <option value="R32">R32 (tvornički ~15g/m)</option>
+            <option value="R410A">R410A (tvornički ~20g/m)</option>
+            <option value="R134a">R134a</option>
+          </select>
+        </div>
+        <div>
+          <label>Ukupna duljina cjevovoda (m)</label>
+          <input type="number" id="pipeLength" step="0.5" placeholder="npr. 12" oninput="calcFreon()">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label>Tvornički prednapunjena duljina (m)</label>
+          <input type="number" id="prechargedLength" value="5" step="0.5" oninput="calcFreon()">
+        </div>
+        <div>
+          <label>Tvornička norma nadopune (g/m)</label>
+          <input type="number" id="gasPerMeter" value="15" step="1" oninput="calcFreon()">
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-title">Potrebna dodatna količina plina:</div>
+        <div class="result-value" id="freonResult">0 g</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:6px;" id="freonNote">Za rute kraće od prednapunjene duljine nije potrebna nadopuna.</div>
+      </div>
+    </section>
+
+    <!-- TAB 4: STRUJNI KALKULATOR -->
+    <section id="tab-struja" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">⚡ Proračun pada napona i kabela</h3>
+      </div>
+
+      <div class="grid-3">
+        <div>
+          <label>Snaga trošila (kW)</label>
+          <input type="number" id="elecPower" step="0.1" value="3.5" oninput="calcVoltageDrop()">
+        </div>
+        <div>
+          <label>Duljina kabela (m)</label>
+          <input type="number" id="elecLength" step="1" value="25" oninput="calcVoltageDrop()">
+        </div>
+        <div>
+          <label>Presjek vodiča (mm²)</label>
+          <select id="elecSection" onchange="calcVoltageDrop()">
+            <option value="1.5">1.5 mm² (rasvjeta/manja trošila)</option>
+            <option value="2.5" selected>2.5 mm² (standardne utičnice/klime)</option>
+            <option value="4.0">4.0 mm²</option>
+            <option value="6.0">6.0 mm²</option>
+            <option value="10.0">10.0 mm²</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-title">Procijenjeni pad napona (230V jednofazno):</div>
+        <div class="result-value" id="voltageDropResult">1.82 % (4.18 V)</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:6px;" id="voltageDropNote">Dopušteni pad napona za instalacije iznosi do 3% (rasvjeta) odnosno do 5% (ostala trošila).</div>
+      </div>
+    </section>
+
+    <!-- TAB 5: ŠIFRARNIK MATERIJALA -->
+    <section id="tab-materijal" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">📦 Brzi šifrarnik najčešćeg materijala</h3>
+      </div>
+      <input type="text" id="searchMaterial" placeholder="🔍 Pretraži materijal (npr. bakar, nosač, kabel)..." oninput="filterMaterials()">
+      <div id="materialsList" style="display:grid; grid-template-columns:1fr; gap:8px;"></div>
+    </section>
+
+    <!-- TAB 6: UPRAVLJANJE DJELATNICIMA (ADMIN) -->
+    <section id="tab-radnici" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">👥 Upravljanje djelatnicima (Admin)</h3>
+      </div>
+
+      <h4 style="font-size:14px; font-weight:700; margin-bottom:12px; color:#38bdf8;">Dodaj novog djelatnika u bazu</h4>
+      <div class="grid-2">
+        <div>
+          <label>Ime i prezime</label>
+          <input type="text" id="newWorkerName" placeholder="npr. Ivan Horvat">
+        </div>
+        <div>
+          <label>Korisničko ime za prijavu</label>
+          <input type="text" id="newWorkerUser" placeholder="npr. ivan" autocapitalize="none">
+        </div>
+      </div>
+      <label>Lozinka</label>
+      <input type="text" id="newWorkerPass" placeholder="npr. deltum2026">
+
+      <button class="btn btn-primary" onclick="addNewWorker()">➕ Spremi radnika u sustav</button>
+
+      <h4 style="font-size:13px; font-weight:700; margin:24px 0 12px 0; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Aktivni djelatnici i lozinke</h4>
+      <div id="workersList"></div>
+    </section>
+  </main>
+
+  <!-- SKRIPTA I POVEZIVANJE S FIREBASE-OM -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, onSnapshot, setDoc, doc, updateDoc, deleteDoc 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // Deltum d.o.o. službena konfiguracija
+    const firebaseConfig = {
+      apiKey: "AIzaSyCM6GdJsc2Lx_bG0qL7M4F8YpummlIM9YM",
+      authDomain: "deltum-evidencija-radnih-sati.firebaseapp.com",
+      projectId: "deltum-evidencija-radnih-sati",
+      storageBucket: "deltum-evidencija-radnih-sati.firebasestorage.app",
+      messagingSenderId: "216380213836",
+      appId: "1:216380213836:web:f99ea22e524e97cbd802e9"
+    };
+
+    // Početni djelatnici (fallback baza u slučaju rada bez mreže)
+    const initialWorkers = [
+      { docId: "dejan", id: "dejan", name: "Dejan Cikoš", user: "dejan", pass: "123", role: "admin" },
+      { docId: "melita", id: "melita", name: "Melita", user: "melita", pass: "123", role: "worker" },
+      { docId: "alen", id: "alen", name: "Alen Ormanec", user: "alen", pass: "Ormanec-1986", role: "worker" }
+    ];
+
+    let db = null;
+    let currentUser = null;
+    let allWorkers = [...initialWorkers];
+    let allLogs = [];
+
+    // Inicijalizacija baze s automatskim sigurnim prijelazom
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      
+      // Sinkronizacija djelatnika
+      const workersCol = collection(db, "workers");
+      onSnapshot(workersCol, (snapshot) => {
+        if (!snapshot.empty) {
+          const loaded = [];
+          snapshot.forEach(docSnap => loaded.push({ docId: docSnap.id, ...docSnap.data() }));
+          allWorkers = loaded;
+        } else {
+          // Ako je baza prazna, postavi početne radnike
+          initialWorkers.forEach(w => setDoc(doc(db, "workers", w.id), w));
+        }
+        renderWorkersList();
+      }, (err) => {
+        console.warn("Lokalni način za radnike:", err);
+        renderWorkersList();
+      });
+
+      // Sinkronizacija radnih naloga
+      const logsCol = collection(db, "work_logs");
+      onSnapshot(logsCol, (snapshot) => {
+        allLogs = [];
+        snapshot.forEach(docSnap => allLogs.push({ docId: docSnap.id, ...docSnap.data() }));
+        renderLogs();
+      }, (err) => {
+        console.warn("Lokalni način za radne naloge:", err);
+      });
+
+    } catch (e) {
+      console.warn("Rad u izvanmrežnom načinu rada:", e);
+      renderWorkersList();
+    }
+
+    // Prijava
+    window.handleLogin = function() {
+      const u = document.getElementById("loginUsername").value.trim().toLowerCase();
+      const p = document.getElementById("loginPassword").value.trim();
+      const err = document.getElementById("loginError");
+
+      const found = allWorkers.find(w => w.user && w.user.toLowerCase() === u && w.pass === p);
+      if (found) {
+        currentUser = found;
+        err.style.display = "none";
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("appScreen").style.display = "block";
+        document.getElementById("userHeader").style.display = "flex";
+        document.getElementById("loggedUserName").innerText = found.name;
+        
+        if (found.role === "admin" || found.user === "dejan") {
+          document.getElementById("adminTabBtn").style.display = "inline-flex";
+        }
+        
+        document.getElementById("logDate").valueAsDate = new Date();
+        renderLogs();
+        calcFreon();
+        calcVoltageDrop();
+        renderMaterialsList();
+      } else {
+        err.style.display = "block";
+      }
+    };
+
+    // Odjava
+    window.logout = function() {
+      currentUser = null;
+      document.getElementById("loginScreen").style.display = "flex";
+      document.getElementById("appScreen").style.display = "none";
+      document.getElementById("userHeader").style.display = "none";
+      document.getElementById("adminTabBtn").style.display = "none";
+    };
+
+    // Spremanje unosa u evidenciju
+    window.saveWorkLog = async function() {
+      const date = document.getElementById("logDate").value;
+      const site = document.getElementById("logSite").value.trim();
+      const hours = document.getElementById("logHours").value;
+      const type = document.getElementById("logType").value;
+      const materials = document.getElementById("logMaterials").value.trim();
+
+      if (!date || !site || !hours) {
+        alert("Molimo unesite datum, naziv gradilišta i broj sati.");
+        return;
+      }
+
+      const entry = {
+        workerName: currentUser.name,
+        workerUser: currentUser.user,
+        date, site, hours: parseFloat(hours), type, materials,
+        createdAt: new Date().toISOString()
+      };
+
+      if (db) {
+        try {
+          await addDoc(collection(db, "work_logs"), entry);
+        } catch (e) {
+          allLogs.push(entry);
+          renderLogs();
+        }
+      } else {
+        allLogs.push(entry);
+        renderLogs();
+      }
+
+      alert("Unos uspješno zabilježen!");
+      document.getElementById("logSite").value = "";
+      document.getElementById("logHours").value = "";
+      document.getElementById("logMaterials").value = "";
+      switchTab("pregled");
+    };
+
+    // Render liste evidencije
+    function renderLogs() {
+      const listDiv = document.getElementById("logsList");
+      if (!listDiv) return;
+      if (allLogs.length === 0) {
+        listDiv.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>Nema zabilježenih unosa u sustavu.</p>";
+        return;
+      }
+
+      let logs = [...allLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+      let html = "";
+      logs.forEach(item => {
+        html += `
+          <div class="log-item">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+              <div>
+                <div style="font-weight:800; font-size:15px; letter-spacing:-0.01em;">${item.site}</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                  📅 ${item.date} • <strong style="color:#38bdf8;">${item.workerName}</strong>
+                </div>
+              </div>
+              <span class="badge badge-primary">${item.hours} h</span>
+            </div>
+            <div style="font-size:13px; color:#cbd5e1; margin-top:6px;">🔧 ${item.type}</div>
+            ${item.materials ? `<div style="font-size:12px; color:#93c5fd; margin-top:8px; background:rgba(2, 132, 199, 0.1); padding:8px 12px; border-radius:8px; border:1px solid rgba(2, 132, 199, 0.2);">📦 <strong>Materijal:</strong> ${item.materials}</div>` : ''}
+          </div>
+        `;
+      });
+      listDiv.innerHTML = html;
+    }
+
+    // Dodavanje novog djelatnika
+    window.addNewWorker = async function() {
+      const name = document.getElementById("newWorkerName").value.trim();
+      const user = document.getElementById("newWorkerUser").value.trim().toLowerCase();
+      const pass = document.getElementById("newWorkerPass").value.trim();
+
+      if (!name || !user || !pass) {
+        alert("Popunite sva polja za novog djelatnika.");
+        return;
+      }
+
+      const newObj = { id: user, name, user, pass, role: "worker" };
+      if (db) {
+        try {
+          await setDoc(doc(db, "workers", user), newObj);
+        } catch (e) {
+          allWorkers.push({ docId: user, ...newObj });
+          renderWorkersList();
+        }
+      } else {
+        allWorkers.push({ docId: user, ...newObj });
+        renderWorkersList();
+      }
+
+      alert(`Djelatnik ${name} je uspješno dodan!`);
+      document.getElementById("newWorkerName").value = "";
+      document.getElementById("newWorkerUser").value = "";
+      document.getElementById("newWorkerPass").value = "";
+    };
+
+    // Uređivanje lozinke
+    window.editWorkerPass = async function(docId, currentPass, name) {
+      const novaLozinka = prompt(`Nova lozinka za djelatnika: ${name}`, currentPass);
+      if (novaLozinka !== null && novaLozinka.trim() !== "") {
+        if (db) {
+          try {
+            await updateDoc(doc(db, "workers", docId), { pass: novaLozinka.trim() });
+          } catch (e) {
+            const w = allWorkers.find(x => x.docId === docId);
+            if (w) w.pass = novaLozinka.trim();
+            renderWorkersList();
+          }
+        } else {
+          const w = allWorkers.find(x => x.docId === docId);
+          if (w) w.pass = novaLozinka.trim();
+          renderWorkersList();
+        }
+        alert("Lozinka je uspješno ažurirana!");
+      }
+    };
+
+    // Brisanje djelatnika
+    window.deleteWorker = async function(docId, name, username) {
+      if (username === "dejan") {
+        alert("Glavni administratorski račun (dejan) ne može se obrisati.");
+        return;
+      }
+
+      if (confirm(`Želite li trajno ukloniti djelatnika ${name} (${username})?`)) {
+        if (db) {
+          try {
+            await deleteDoc(doc(db, "workers", docId));
+          } catch (e) {
+            allWorkers = allWorkers.filter(x => x.docId !== docId);
+            renderWorkersList();
+          }
+        } else {
+          allWorkers = allWorkers.filter(x => x.docId !== docId);
+          renderWorkersList();
+        }
+        alert(`Djelatnik ${name} je obrisan.`);
+      }
+    };
+
+    // Prikaz popisa djelatnika s opcijama
+    function renderWorkersList() {
+      const div = document.getElementById("workersList");
+      if (!div) return;
+      let html = "";
+      allWorkers.forEach(w => {
+        const isDejan = w.user === "dejan";
+        html += `
+          <div class="worker-row">
+            <div>
+              <div style="font-weight:700; font-size:14px;">${w.name} <span style="font-size:12px; color:var(--text-muted); font-weight:400;">(${w.user})</span></div>
+              <div style="font-size:12px; color:#38bdf8; font-family:var(--font-mono); margin-top:2px;">
+                Lozinka: <span style="color:#fff; font-weight:700;">${w.pass}</span>
+              </div>
+            </div>
+            <div class="worker-actions">
+              <button class="action-icon-btn" onclick="editWorkerPass('${w.docId}', '${w.pass}', '${w.name}')">
+                ✏️ Izmijeni lozinku
+              </button>
+              ${!isDejan ? `
+                <button class="action-icon-btn delete" onclick="deleteWorker('${w.docId}', '${w.name}', '${w.user}')">
+                  🗑️ Obriši
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      });
+      div.innerHTML = html;
+    }
+
+    // KALKULATOR FREONA
+    window.calcFreon = function() {
+      const len = parseFloat(document.getElementById("pipeLength").value) || 0;
+      const pre = parseFloat(document.getElementById("prechargedLength").value) || 0;
+      const rate = parseFloat(document.getElementById("gasPerMeter").value) || 15;
+      
+      const resEl = document.getElementById("freonResult");
+      const noteEl = document.getElementById("freonNote");
+
+      if (len > pre) {
+        const extra = Math.round((len - pre) * rate);
+        resEl.innerText = `${extra} g`;
+        noteEl.innerText = `Potrebno je dopuniti ${extra} g plina za dodatnih ${(len - pre).toFixed(1)} metara cjevovoda.`;
+      } else {
+        resEl.innerText = `0 g`;
+        noteEl.innerText = `Duljina je unutar tvorničke prednapune (${pre} m). Nadopuna nije potrebna.`;
+      }
+    };
+
+    // KALKULATOR PADA NAPONA
+    window.calcVoltageDrop = function() {
+      const P = parseFloat(document.getElementById("elecPower").value) || 0; // kW
+      const L = parseFloat(document.getElementById("elecLength").value) || 0; // m
+      const S = parseFloat(document.getElementById("elecSection").value) || 2.5; // mm2
+      const U = 230; // V
+
+      const I = (P * 1000) / U;
+      const gamma = 56; // bakar m/(ohm*mm2)
+      const deltaU = (2 * L * I) / (gamma * S);
+      const percentage = (deltaU / U) * 100;
+
+      const resEl = document.getElementById("voltageDropResult");
+      const noteEl = document.getElementById("voltageDropNote");
+
+      resEl.innerText = `${percentage.toFixed(2)} % (${deltaU.toFixed(2)} V)`;
+      if (percentage <= 3) {
+        resEl.style.color = "#34d399";
+        noteEl.innerText = "Pad napona je u idealnim granicama (ispod 3%).";
+      } else if (percentage <= 5) {
+        resEl.style.color = "#fbbf24";
+        noteEl.innerText = "Pad napona je prihvatljiv za pogonska trošila (3% do 5%).";
+      } else {
+        resEl.style.color = "#f87171";
+        noteEl.innerText = "Upozorenje: Pad napona prelazi 5%! Preporučuje se veći presjek vodiča.";
+      }
+    };
+
+    // ŠIFRARNIK MATERIJALA
+    const materialsDatabase = [
+      { cat: "Klimatizacija", name: "Bakar Cu 1/4\" + 3/8\" u izolaciji", unit: "metar" },
+      { cat: "Klimatizacija", name: "Bakar Cu 1/4\" + 1/2\" u izolaciji", unit: "metar" },
+      { cat: "Klimatizacija", name: "Zidni nosač za vanjsku jedinicu 450 mm", unit: "par" },
+      { cat: "Klimatizacija", name: "Antivibracijske gume (amortizeri)", unit: "set 4 kom" },
+      { cat: "Klimatizacija", name: "Kondenzacijsko crijevo fi 16/18 mm", unit: "metar" },
+      { cat: "Klimatizacija", name: "Kanalica za instalaciju klime 60x45 mm", unit: "metar" },
+      { cat: "Klimatizacija", name: "Freon R32 boca", unit: "kg" },
+      { cat: "Elektro", name: "Kabel NYM-J (PP-Y) 3x1.5 mm²", unit: "metar" },
+      { cat: "Elektro", name: "Kabel NYM-J (PP-Y) 3x2.5 mm²", unit: "metar" },
+      { cat: "Elektro", name: "Kabel NYM-J (PP-Y) 5x2.5 mm²", unit: "metar" },
+      { cat: "Elektro", name: "Automatski osigurač 1P B16A", unit: "kom" },
+      { cat: "Elektro", name: "Automatski osigurač 1P B10A", unit: "kom" },
+      { cat: "Elektro", name: "FID sklopka 40/0.03A 4-polna", unit: "kom" }
+    ];
+
+    function renderMaterialsList(filterText = "") {
+      const div = document.getElementById("materialsList");
+      if (!div) return;
+      const filtered = materialsDatabase.filter(m => 
+        m.name.toLowerCase().includes(filterText.toLowerCase()) || 
+        m.cat.toLowerCase().includes(filterText.toLowerCase())
+      );
+
+      div.innerHTML = filtered.map(m => `
+        <div style="background:var(--card-sub); border:1px solid var(--card-border); padding:10px 14px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; font-size:13px;">${m.name}</div>
+            <div style="font-size:11px; color:var(--text-muted);">${m.cat}</div>
+          </div>
+          <span class="badge badge-primary">${m.unit}</span>
+        </div>
+      `).join("");
+    }
+    window.filterMaterials = () => renderMaterialsList(document.getElementById("searchMaterial").value);
+
+    // IZVOZ SAŽETKA EVIDENCIJE
+    window.exportLogsToText = function() {
+      if (allLogs.length === 0) {
+        alert("Nema unosa za izvoz.");
+        return;
+      }
+      let report = "DELTUM d.o.o. - EVIDENCIJA RADNIH SATI\n====================================\n\n";
+      allLogs.forEach(l => {
+        report += `Datum: ${l.date} | Radnik: ${l.workerName} | Sati: ${l.hours}h\nGradilište: ${l.site}\nKategorija: ${l.type}\nMaterijal: ${l.materials || '-'}\n------------------------------------\n`;
+      });
+      navigator.clipboard.writeText(report);
+      alert("Cjeloviti sažetak radova je kopiran u međuspremnik!");
+    };
+
+    // NAVIGACIJA TABOVA
+    window.switchTab = function(tab) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("main section").forEach(s => s.style.display = "none");
+      document.getElementById(`tab-${tab}`).style.display = "block";
+      
+      const activeBtn = Array.from(document.querySelectorAll(".tab-btn")).find(b => b.getAttribute("onclick").includes(tab));
+      if (activeBtn) activeBtn.classList.add("active");
+    };
+
+    // MODAL FUNKCIJE
+    window.openCompanyModal = () => document.getElementById("companyModal").classList.add("open");
+    window.closeCompanyModal = () => document.getElementById("companyModal").classList.remove("open");
+    window.copyCompanyInfo = () => {
+      const text = "Deltum d.o.o.\nĐure Sudete 5, 48326 Virje\nOIB: 40386639373\nPDV ID: HR40386639373";
+      navigator.clipboard.writeText(text);
+      alert("Podaci o tvrtki Deltum d.o.o. su kopirani!");
+    };
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Deltum d.o.o. - Evidencija Radnih Sati i Tehnički Alati</title>
+  
+  <!-- Fontovi & Ikone -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* RESET & SISTEMSKE VARIJABLE */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f172a;
+      --card-sub: #1e293b;
+      --card-border: #334155;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-glow: rgba(2, 132, 199, 0.35);
+      --purple: #9333ea;
+      --purple-hover: #7e22ce;
+      --purple-glow: rgba(147, 51, 234, 0.35);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      padding-bottom: 40px;
+    }
+
+    /* ZAGLAVLJE */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 12px 18px;
+    }
+
+    .header-container {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-sub);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    /* KONTEJNERI & KARTICE */
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 18px 16px;
+      width: 100%;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.45);
+    }
+
+    .card-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* FORME & POLJA */
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--card-sub);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: var(--font-main);
+      font-size: 14px;
+      margin-bottom: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    /* GUMBI */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 12px;
+      font-family: var(--font-main);
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-secondary {
+      background: var(--card-sub);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--rose);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-sm {
+      width: auto;
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    /* NAVIGACIJA TABOVA */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 11px 18px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+
+    /* KALKULATORI & REZULTAT BOX */
+    .result-box {
+      background: linear-gradient(145deg, rgba(2, 132, 199, 0.12), rgba(147, 51, 234, 0.08));
+      border: 1px solid rgba(2, 132, 199, 0.3);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .result-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .result-value {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+
+    /* LISTA RADNIKA & EVIDENCIJA */
+    .log-item {
+      background: var(--card-sub);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .worker-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    @media (min-width: 640px) {
+      .worker-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .worker-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+
+    .action-icon-btn.delete {
+      color: var(--rose);
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+    }
+
+    .badge-primary { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
+    .badge-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    .login-wrapper {
+      min-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MODAL: PODACI O TVRTKI -->
+  <div id="companyModal" class="modal-overlay" onclick="closeCompanyModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:18px; font-weight:800;">Podaci o tvrtki</h3>
+        <button onclick="closeCompanyModal()" style="background:none; border:none; color:var(--text-muted); font-size:24px; cursor:pointer;">&times;</button>
+      </div>
+      <div style="background:var(--card-sub); border:1px solid var(--card-border); border-radius:12px; padding:16px; font-size:13px; line-height:1.8;">
+        <div><strong>Tvrtka:</strong> Deltum d.o.o.</div>
+        <div><strong>Djelatnost:</strong> Klimatizacija, grijanje i elektroinstalacije</div>
+        <div><strong>Sjedište:</strong> Đure Sudete 5, 48326 Virje</div>
+        <div><strong>OIB:</strong> 40386639373</div>
+        <div><strong>PDV ID:</strong> HR40386639373</div>
+      </div>
+      <button class="btn btn-secondary" onclick="copyCompanyInfo()" style="margin-top:14px;">📋 Kopiraj podatke</button>
+    </div>
+  </div>
+
+  <!-- GLAVNO ZAGLAVLJE -->
+  <header>
+    <div class="header-container">
+      <div class="brand-group" onclick="openCompanyModal()">
+        <div class="logo-badge">❄️⚡</div>
+        <div>
+          <div class="brand-title">Deltum d.o.o.</div>
+          <div class="brand-sub">Podaci o tvrtki ⓘ</div>
+        </div>
+      </div>
+      <div id="userHeader" style="display:none;" class="user-pill">
+        <span id="loggedUserName" class="user-name"></span>
+        <button class="btn btn-secondary btn-sm" onclick="logout()">Odjava</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- EKRAN ZA PRIJAVU -->
+  <div id="loginScreen" class="container login-wrapper">
+    <div class="card" style="width:100%; max-width:390px; text-align:center;">
+      <div class="logo-badge" style="margin:0 auto 14px auto;">❄️⚡</div>
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:4px;">Evidencija radnih sati</h2>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Prijava djelatnika i uprave tvrtke</p>
+      
+      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(2, 132, 199, 0.1); border:1px solid rgba(2, 132, 199, 0.3); border-radius:20px; padding:6px 14px; font-size:11px; margin-bottom:20px; cursor:pointer;" onclick="openCompanyModal()">
+        🏢 Deltum d.o.o. • OIB: 40386639373 <span style="color:var(--primary); font-weight:700;">ⓘ Detalji</span>
+      </div>
+
+      <div style="text-align:left;">
+        <label>Korisničko ime</label>
+        <input type="text" id="loginUsername" placeholder="npr. dejan, melita ili alen" autocapitalize="none">
+        
+        <label>Lozinka</label>
+        <input type="password" id="loginPassword" placeholder="Lozinka">
+        
+        <div id="loginError" style="color:var(--rose); font-size:12px; font-weight:700; margin-bottom:12px; display:none;">Neispravno korisničko ime ili lozinka.</div>
+        
+        <button class="btn btn-primary" onclick="handleLogin()">Prijavi se</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLAVNI SADRŽAJ NAKON PRIJAVE -->
+  <main id="appScreen" class="container" style="display:none;">
+    <div class="nav-tabs" id="navTabs">
+      <button class="tab-btn active" onclick="switchTab('unos')">✍️ Novi unos</button>
+      <button class="tab-btn" onclick="switchTab('pregled')">📋 Pregled rada</button>
+      <button class="tab-btn" onclick="switchTab('klima')">❄️ Freon kalkulator</button>
+      <button class="tab-btn" onclick="switchTab('struja')">⚡ Pad napona</button>
+      <button class="tab-btn" onclick="switchTab('materijal')">📦 Šifrarnik</button>
+      <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="switchTab('radnici')">👥 Djelatnici</button>
+    </div>
+
+    <!-- TAB 1: NOVI UNOS RADA -->
+    <section id="tab-unos" class="card">
+      <div class="card-header-line">
+        <h3 class="card-title">✍️ Radni nalog / novi unos</h3>
+        <span class="badge badge-emerald">Aktivan nalog</span>
+      </div>
+      
+      <div class="grid-2">
+        <div>
+          <label>Datum radova</label>
+          <input type="date" id="logDate">
+        </div>
+        <div>
+          <label>Broj odrađenih sati</label>
+          <input type="number" id="logHours" step="0.5" placeholder="8">
+        </div>
+      </div>
+
+      <label>Gradilište / Lokacija / Klijent</label>
+      <input type="text" id="logSite" placeholder="npr. Obiteljska kuća Horvat, Đurđevac ili Virje">
+
+      <label>Kategorija radova</label>
+      <select id="logType">
+        <option value="Montaža klima uređaja">Montaža klima uređaja</option>
+        <option value="Servis i održavanje klima">Servis i održavanje klima</option>
+        <option value="Dizalica topline">Dizalica topline (montaža/puštanje)</option>
+        <option value="Elektroinstalacije - grubi radovi">Elektroinstalacije - grubi radovi (štemanje/cijevi)</option>
+        <option value="Elektroinstalacije - fina montaža">Elektroinstalacije - fina montaža (utičnice/ormari)</option>
+        <option value="Grijanje i vodovodne instalacije">Grijanje i vodovodne instalacije</option>
+        <option value="Hitne intervencije i terenski izvid">Hitne intervencije i terenski izvid</option>
+      </select>
+
+      <label>Utrošeni materijal i tehničke bilješke</label>
+      <textarea id="logMaterials" rows="3" placeholder="npr. 8m Cu cijevi 1/4-3/8, konzola 450mm, 0.45kg R32 freona, 3 automatska osigurača B16..."></textarea>
+
+      <button class="btn btn-primary" onclick="saveWorkLog()">💾 Spremi u bazu</button>
+    </section>
+
+    <!-- TAB 2: PREGLED SVIH RADOVA -->
+    <section id="tab-pregled" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">📋 Povijest i evidencija rada</h3>
+        <button class="btn btn-secondary btn-sm" onclick="exportLogsToText()">📤 Preuzmi sažetak</button>
+      </div>
+      <div id="logsList">Učitavanje podataka...</div>
+    </section>
+
+    <!-- TAB 3: KALKULATOR FREONA -->
+    <section id="tab-klima" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">❄️ Kalkulator nadopune plina (Freon)</h3>
+      </div>
+      
+      <div class="grid-2">
+        <div>
+          <label>Tip rashladnog sredstva</label>
+          <select id="gasType">
+            <option value="R32">R32 (tvornički ~15g/m)</option>
+            <option value="R410A">R410A (tvornički ~20g/m)</option>
+            <option value="R134a">R134a</option>
+          </select>
+        </div>
+        <div>
+          <label>Ukupna duljina cjevovoda (m)</label>
+          <input type="number" id="pipeLength" step="0.5" placeholder="npr. 12" oninput="calcFreon()">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label>Tvornički prednapunjena duljina (m)</label>
+          <input type="number" id="prechargedLength" value="5" step="0.5" oninput="calcFreon()">
+        </div>
+        <div>
+          <label>Tvornička norma nadopune (g/m)</label>
+          <input type="number" id="gasPerMeter" value="15" step="1" oninput="calcFreon()">
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-title">Potrebna dodatna količina plina:</div>
+        <div class="result-value" id="freonResult">0 g</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:6px;" id="freonNote">Za rute kraće od prednapunjene duljine nije potrebna nadopuna.</div>
+      </div>
+    </section>
+
+    <!-- TAB 4: STRUJNI KALKULATOR -->
+    <section id="tab-struja" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">⚡ Proračun pada napona i kabela</h3>
+      </div>
+
+      <div class="grid-3">
+        <div>
+          <label>Snaga trošila (kW)</label>
+          <input type="number" id="elecPower" step="0.1" value="3.5" oninput="calcVoltageDrop()">
+        </div>
+        <div>
+          <label>Duljina kabela (m)</label>
+          <input type="number" id="elecLength" step="1" value="25" oninput="calcVoltageDrop()">
+        </div>
+        <div>
+          <label>Presjek vodiča (mm²)</label>
+          <select id="elecSection" onchange="calcVoltageDrop()">
+            <option value="1.5">1.5 mm² (rasvjeta/manja trošila)</option>
+            <option value="2.5" selected>2.5 mm² (standardne utičnice/klime)</option>
+            <option value="4.0">4.0 mm²</option>
+            <option value="6.0">6.0 mm²</option>
+            <option value="10.0">10.0 mm²</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-title">Procijenjeni pad napona (230V jednofazno):</div>
+        <div class="result-value" id="voltageDropResult">1.82 % (4.18 V)</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:6px;" id="voltageDropNote">Dopušteni pad napona za instalacije iznosi do 3% (rasvjeta) odnosno do 5% (ostala trošila).</div>
+      </div>
+    </section>
+
+    <!-- TAB 5: ŠIFRARNIK MATERIJALA -->
+    <section id="tab-materijal" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">📦 Brzi šifrarnik najčešćeg materijala</h3>
+      </div>
+      <input type="text" id="searchMaterial" placeholder="🔍 Pretraži materijal (npr. bakar, nosač, kabel)..." oninput="filterMaterials()">
+      <div id="materialsList" style="display:grid; grid-template-columns:1fr; gap:8px;"></div>
+    </section>
+
+    <!-- TAB 6: UPRAVLJANJE DJELATNICIMA (ADMIN) -->
+    <section id="tab-radnici" class="card" style="display:none;">
+      <div class="card-header-line">
+        <h3 class="card-title">👥 Upravljanje djelatnicima (Admin)</h3>
+      </div>
+
+      <h4 style="font-size:14px; font-weight:700; margin-bottom:12px; color:#38bdf8;">Dodaj novog djelatnika u bazu</h4>
+      <div class="grid-2">
+        <div>
+          <label>Ime i prezime</label>
+          <input type="text" id="newWorkerName" placeholder="npr. Ivan Horvat">
+        </div>
+        <div>
+          <label>Korisničko ime za prijavu</label>
+          <input type="text" id="newWorkerUser" placeholder="npr. ivan" autocapitalize="none">
+        </div>
+      </div>
+      <label>Lozinka</label>
+      <input type="text" id="newWorkerPass" placeholder="npr. deltum2026">
+
+      <button class="btn btn-primary" onclick="addNewWorker()">➕ Spremi radnika u sustav</button>
+
+      <h4 style="font-size:13px; font-weight:700; margin:24px 0 12px 0; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Aktivni djelatnici i lozinke</h4>
+      <div id="workersList"></div>
+    </section>
+  </main>
+
+  <!-- SKRIPTA I POVEZIVANJE S FIREBASE-OM -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, onSnapshot, setDoc, doc, updateDoc, deleteDoc 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // Deltum d.o.o. službena konfiguracija
+    const firebaseConfig = {
+      apiKey: "AIzaSyCM6GdJsc2Lx_bG0qL7M4F8YpummlIM9YM",
+      authDomain: "deltum-evidencija-radnih-sati.firebaseapp.com",
+      projectId: "deltum-evidencija-radnih-sati",
+      storageBucket: "deltum-evidencija-radnih-sati.firebasestorage.app",
+      messagingSenderId: "216380213836",
+      appId: "1:216380213836:web:f99ea22e524e97cbd802e9"
+    };
+
+    // Početni djelatnici (fallback baza u slučaju rada bez mreže)
+    const initialWorkers = [
+      { docId: "dejan", id: "dejan", name: "Dejan Cikoš", user: "dejan", pass: "123", role: "admin" },
+      { docId: "melita", id: "melita", name: "Melita", user: "melita", pass: "123", role: "worker" },
+      { docId: "alen", id: "alen", name: "Alen Ormanec", user: "alen", pass: "Ormanec-1986", role: "worker" }
+    ];
+
+    let db = null;
+    let currentUser = null;
+    let allWorkers = [...initialWorkers];
+    let allLogs = [];
+
+    // Inicijalizacija baze s automatskim sigurnim prijelazom
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      
+      // Sinkronizacija djelatnika
+      const workersCol = collection(db, "workers");
+      onSnapshot(workersCol, (snapshot) => {
+        if (!snapshot.empty) {
+          const loaded = [];
+          snapshot.forEach(docSnap => loaded.push({ docId: docSnap.id, ...docSnap.data() }));
+          allWorkers = loaded;
+        } else {
+          // Ako je baza prazna, postavi početne radnike
+          initialWorkers.forEach(w => setDoc(doc(db, "workers", w.id), w));
+        }
+        renderWorkersList();
+      }, (err) => {
+        console.warn("Lokalni način za radnike:", err);
+        renderWorkersList();
+      });
+
+      // Sinkronizacija radnih naloga
+      const logsCol = collection(db, "work_logs");
+      onSnapshot(logsCol, (snapshot) => {
+        allLogs = [];
+        snapshot.forEach(docSnap => allLogs.push({ docId: docSnap.id, ...docSnap.data() }));
+        renderLogs();
+      }, (err) => {
+        console.warn("Lokalni način za radne naloge:", err);
+      });
+
+    } catch (e) {
+      console.warn("Rad u izvanmrežnom načinu rada:", e);
+      renderWorkersList();
+    }
+
+    // Prijava
+    window.handleLogin = function() {
+      const u = document.getElementById("loginUsername").value.trim().toLowerCase();
+      const p = document.getElementById("loginPassword").value.trim();
+      const err = document.getElementById("loginError");
+
+      const found = allWorkers.find(w => w.user && w.user.toLowerCase() === u && w.pass === p);
+      if (found) {
+        currentUser = found;
+        err.style.display = "none";
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("appScreen").style.display = "block";
+        document.getElementById("userHeader").style.display = "flex";
+        document.getElementById("loggedUserName").innerText = found.name;
+        
+        if (found.role === "admin" || found.user === "dejan") {
+          document.getElementById("adminTabBtn").style.display = "inline-flex";
+        }
+        
+        document.getElementById("logDate").valueAsDate = new Date();
+        renderLogs();
+        calcFreon();
+        calcVoltageDrop();
+        renderMaterialsList();
+      } else {
+        err.style.display = "block";
+      }
+    };
+
+    // Odjava
+    window.logout = function() {
+      currentUser = null;
+      document.getElementById("loginScreen").style.display = "flex";
+      document.getElementById("appScreen").style.display = "none";
+      document.getElementById("userHeader").style.display = "none";
+      document.getElementById("adminTabBtn").style.display = "none";
+    };
+
+    // Spremanje unosa u evidenciju
+    window.saveWorkLog = async function() {
+      const date = document.getElementById("logDate").value;
+      const site = document.getElementById("logSite").value.trim();
+      const hours = document.getElementById("logHours").value;
+      const type = document.getElementById("logType").value;
+      const materials = document.getElementById("logMaterials").value.trim();
+
+      if (!date || !site || !hours) {
+        alert("Molimo unesite datum, naziv gradilišta i broj sati.");
+        return;
+      }
+
+      const entry = {
+        workerName: currentUser.name,
+        workerUser: currentUser.user,
+        date, site, hours: parseFloat(hours), type, materials,
+        createdAt: new Date().toISOString()
+      };
+
+      if (db) {
+        try {
+          await addDoc(collection(db, "work_logs"), entry);
+        } catch (e) {
+          allLogs.push(entry);
+          renderLogs();
+        }
+      } else {
+        allLogs.push(entry);
+        renderLogs();
+      }
+
+      alert("Unos uspješno zabilježen!");
+      document.getElementById("logSite").value = "";
+      document.getElementById("logHours").value = "";
+      document.getElementById("logMaterials").value = "";
+      switchTab("pregled");
+    };
+
+    // Render liste evidencije
+    function renderLogs() {
+      const listDiv = document.getElementById("logsList");
+      if (!listDiv) return;
+      if (allLogs.length === 0) {
+        listDiv.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>Nema zabilježenih unosa u sustavu.</p>";
+        return;
+      }
+
+      let logs = [...allLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+      let html = "";
+      logs.forEach(item => {
+        html += `
+          <div class="log-item">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+              <div>
+                <div style="font-weight:800; font-size:15px; letter-spacing:-0.01em;">${item.site}</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                  📅 ${item.date} • <strong style="color:#38bdf8;">${item.workerName}</strong>
+                </div>
+              </div>
+              <span class="badge badge-primary">${item.hours} h</span>
+            </div>
+            <div style="font-size:13px; color:#cbd5e1; margin-top:6px;">🔧 ${item.type}</div>
+            ${item.materials ? `<div style="font-size:12px; color:#93c5fd; margin-top:8px; background:rgba(2, 132, 199, 0.1); padding:8px 12px; border-radius:8px; border:1px solid rgba(2, 132, 199, 0.2);">📦 <strong>Materijal:</strong> ${item.materials}</div>` : ''}
+          </div>
+        `;
+      });
+      listDiv.innerHTML = html;
+    }
+
+    // Dodavanje novog djelatnika
+    window.addNewWorker = async function() {
+      const name = document.getElementById("newWorkerName").value.trim();
+      const user = document.getElementById("newWorkerUser").value.trim().toLowerCase();
+      const pass = document.getElementById("newWorkerPass").value.trim();
+
+      if (!name || !user || !pass) {
+        alert("Popunite sva polja za novog djelatnika.");
+        return;
+      }
+
+      const newObj = { id: user, name, user, pass, role: "worker" };
+      if (db) {
+        try {
+          await setDoc(doc(db, "workers", user), newObj);
+        } catch (e) {
+          allWorkers.push({ docId: user, ...newObj });
+          renderWorkersList();
+        }
+      } else {
+        allWorkers.push({ docId: user, ...newObj });
+        renderWorkersList();
+      }
+
+      alert(`Djelatnik ${name} je uspješno dodan!`);
+      document.getElementById("newWorkerName").value = "";
+      document.getElementById("newWorkerUser").value = "";
+      document.getElementById("newWorkerPass").value = "";
+    };
+
+    // Uređivanje lozinke
+    window.editWorkerPass = async function(docId, currentPass, name) {
+      const novaLozinka = prompt(`Nova lozinka za djelatnika: ${name}`, currentPass);
+      if (novaLozinka !== null && novaLozinka.trim() !== "") {
+        if (db) {
+          try {
+            await updateDoc(doc(db, "workers", docId), { pass: novaLozinka.trim() });
+          } catch (e) {
+            const w = allWorkers.find(x => x.docId === docId);
+            if (w) w.pass = novaLozinka.trim();
+            renderWorkersList();
+          }
+        } else {
+          const w = allWorkers.find(x => x.docId === docId);
+          if (w) w.pass = novaLozinka.trim();
+          renderWorkersList();
+        }
+        alert("Lozinka je uspješno ažurirana!");
+      }
+    };
+
+    // Brisanje djelatnika
+    window.deleteWorker = async function(docId, name, username) {
+      if (username === "dejan") {
+        alert("Glavni administratorski račun (dejan) ne može se obrisati.");
+        return;
+      }
+
+      if (confirm(`Želite li trajno ukloniti djelatnika ${name} (${username})?`)) {
+        if (db) {
+          try {
+            await deleteDoc(doc(db, "workers", docId));
+          } catch (e) {
+            allWorkers = allWorkers.filter(x => x.docId !== docId);
+            renderWorkersList();
+          }
+        } else {
+          allWorkers = allWorkers.filter(x => x.docId !== docId);
+          renderWorkersList();
+        }
+        alert(`Djelatnik ${name} je obrisan.`);
+      }
+    };
+
+    // Prikaz popisa djelatnika s opcijama
+    function renderWorkersList() {
+      const div = document.getElementById("workersList");
+      if (!div) return;
+      let html = "";
+      allWorkers.forEach(w => {
+        const isDejan = w.user === "dejan";
+        html += `
+          <div class="worker-row">
+            <div>
+              <div style="font-weight:700; font-size:14px;">${w.name} <span style="font-size:12px; color:var(--text-muted); font-weight:400;">(${w.user})</span></div>
+              <div style="font-size:12px; color:#38bdf8; font-family:var(--font-mono); margin-top:2px;">
+                Lozinka: <span style="color:#fff; font-weight:700;">${w.pass}</span>
+              </div>
+            </div>
+            <div class="worker-actions">
+              <button class="action-icon-btn" onclick="editWorkerPass('${w.docId}', '${w.pass}', '${w.name}')">
+                ✏️ Izmijeni lozinku
+              </button>
+              ${!isDejan ? `
+                <button class="action-icon-btn delete" onclick="deleteWorker('${w.docId}', '${w.name}', '${w.user}')">
+                  🗑️ Obriši
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      });
+      div.innerHTML = html;
+    }
+
+    // KALKULATOR FREONA
+    window.calcFreon = function() {
+      const len = parseFloat(document.getElementById("pipeLength").value) || 0;
+      const pre = parseFloat(document.getElementById("prechargedLength").value) || 0;
+      const rate = parseFloat(document.getElementById("gasPerMeter").value) || 15;
+      
+      const resEl = document.getElementById("freonResult");
+      const noteEl = document.getElementById("freonNote");
+
+      if (len > pre) {
+        const extra = Math.round((len - pre) * rate);
+        resEl.innerText = `${extra} g`;
+        noteEl.innerText = `Potrebno je dopuniti ${extra} g plina za dodatnih ${(len - pre).toFixed(1)} metara cjevovoda.`;
+      } else {
+        resEl.innerText = `0 g`;
+        noteEl.innerText = `Duljina je unutar tvorničke prednapune (${pre} m). Nadopuna nije potrebna.`;
+      }
+    };
+
+    // KALKULATOR PADA NAPONA
+    window.calcVoltageDrop = function() {
+      const P = parseFloat(document.getElementById("elecPower").value) || 0; // kW
+      const L = parseFloat(document.getElementById("elecLength").value) || 0; // m
+      const S = parseFloat(document.getElementById("elecSection").value) || 2.5; // mm2
+      const U = 230; // V
+
+      const I = (P * 1000) / U;
+      const gamma = 56; // bakar m/(ohm*mm2)
+      const deltaU = (2 * L * I) / (gamma * S);
+      const percentage = (deltaU / U) * 100;
+
+      const resEl = document.getElementById("voltageDropResult");
+      const noteEl = document.getElementById("voltageDropNote");
+
+      resEl.innerText = `${percentage.toFixed(2)} % (${deltaU.toFixed(2)} V)`;
+      if (percentage <= 3) {
+        resEl.style.color = "#34d399";
+        noteEl.innerText = "Pad napona je u idealnim granicama (ispod 3%).";
+      } else if (percentage <= 5) {
+        resEl.style.color = "#fbbf24";
+        noteEl.innerText = "Pad napona je prihvatljiv za pogonska trošila (3% do 5%).";
+      } else {
+        resEl.style.color = "#f87171";
+        noteEl.innerText = "Upozorenje: Pad napona prelazi 5%! Preporučuje se veći presjek vodiča.";
+      }
+    };
+
+    // ŠIFRARNIK MATERIJALA
+    const materialsDatabase = [
+      { cat: "Klimatizacija", name: "Bakar Cu 1/4\" + 3/8\" u izolaciji", unit: "metar" },
+      { cat: "Klimatizacija", name: "Bakar Cu 1/4\" + 1/2\" u izolaciji", unit: "metar" },
+      { cat: "Klimatizacija", name: "Zidni nosač za vanjsku jedinicu 450 mm", unit: "par" },
+      { cat: "Klimatizacija", name: "Antivibracijske gume (amortizeri)", unit: "set 4 kom" },
+      { cat: "Klimatizacija", name: "Kondenzacijsko crijevo fi 16/18 mm", unit: "metar" },
+      { cat: "Klimatizacija", name: "Kanalica za instalaciju klime 60x45 mm", unit: "metar" },
+      { cat: "Klimatizacija", name: "Freon R32 boca", unit: "kg" },
+      { cat: "Elektro", name: "Kabel NYM-J (PP-Y) 3x1.5 mm²", unit: "metar" },
+      { cat: "Elektro", name: "Kabel NYM-J (PP-Y) 3x2.5 mm²", unit: "metar" },
+      { cat: "Elektro", name: "Kabel NYM-J (PP-Y) 5x2.5 mm²", unit: "metar" },
+      { cat: "Elektro", name: "Automatski osigurač 1P B16A", unit: "kom" },
+      { cat: "Elektro", name: "Automatski osigurač 1P B10A", unit: "kom" },
+      { cat: "Elektro", name: "FID sklopka 40/0.03A 4-polna", unit: "kom" }
+    ];
+
+    function renderMaterialsList(filterText = "") {
+      const div = document.getElementById("materialsList");
+      if (!div) return;
+      const filtered = materialsDatabase.filter(m => 
+        m.name.toLowerCase().includes(filterText.toLowerCase()) || 
+        m.cat.toLowerCase().includes(filterText.toLowerCase())
+      );
+
+      div.innerHTML = filtered.map(m => `
+        <div style="background:var(--card-sub); border:1px solid var(--card-border); padding:10px 14px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; font-size:13px;">${m.name}</div>
+            <div style="font-size:11px; color:var(--text-muted);">${m.cat}</div>
+          </div>
+          <span class="badge badge-primary">${m.unit}</span>
+        </div>
+      `).join("");
+    }
+    window.filterMaterials = () => renderMaterialsList(document.getElementById("searchMaterial").value);
+
+    // IZVOZ SAŽETKA EVIDENCIJE
+    window.exportLogsToText = function() {
+      if (allLogs.length === 0) {
+        alert("Nema unosa za izvoz.");
+        return;
+      }
+      let report = "DELTUM d.o.o. - EVIDENCIJA RADNIH SATI\n====================================\n\n";
+      allLogs.forEach(l => {
+        report += `Datum: ${l.date} | Radnik: ${l.workerName} | Sati: ${l.hours}h\nGradilište: ${l.site}\nKategorija: ${l.type}\nMaterijal: ${l.materials || '-'}\n------------------------------------\n`;
+      });
+      navigator.clipboard.writeText(report);
+      alert("Cjeloviti sažetak radova je kopiran u međuspremnik!");
+    };
+
+    // NAVIGACIJA TABOVA
+    window.switchTab = function(tab) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("main section").forEach(s => s.style.display = "none");
+      document.getElementById(`tab-${tab}`).style.display = "block";
+      
+      const activeBtn = Array.from(document.querySelectorAll(".tab-btn")).find(b => b.getAttribute("onclick").includes(tab));
+      if (activeBtn) activeBtn.classList.add("active");
+    };
+
+    // MODAL FUNKCIJE
+    window.openCompanyModal = () => document.getElementById("companyModal").classList.add("open");
+    window.closeCompanyModal = () => document.getElementById("companyModal").classList.remove("open");
+    window.copyCompanyInfo = () => {
+      const text = "Deltum d.o.o.\nĐure Sudete 5, 48326 Virje\nOIB: 40386639373\nPDV ID: HR40386639373";
+      navigator.clipboard.writeText(text);
+      alert("Podaci o tvrtki Deltum d.o.o. su kopirani!");
+    };
+  </script>
+</body>
+</html>
